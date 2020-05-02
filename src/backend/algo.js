@@ -1,3 +1,2 @@
-var nowDate = new Date();
-
-console.log(nowDate.getHours());
+var sample = require('./db_sample');
+console.log(sample);

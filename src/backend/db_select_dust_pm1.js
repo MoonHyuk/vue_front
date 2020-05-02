@@ -9,7 +9,7 @@ module.exports = function () {
 
                 var sql = 'select * from dust_1 where checkDate=\'' +
                     '' + nowDate.getFullYear() + '-' + (parseInt(nowDate.getMonth()) + 1) + '-' + nowDate.getDate() + '\''
-                    + ' and checkTime<=\'' + nowDate.getHours() + ':00:00\'' + ' and checkTime>=\'' + (nowDate.getHours() - 11) + ':00:00\'';
+                    + ' and checkTime<=\'' + nowDate.getHours() + ':00:00\'' + ' and checkTime>=\'' + (nowDate.getHours() - 12) + ':00:00\'';
 
 
                 /*

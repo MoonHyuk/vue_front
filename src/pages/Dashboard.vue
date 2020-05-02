@@ -138,22 +138,9 @@
   import TaskList from './Dashboard/TaskList';
   import UserTable from './Dashboard/UserTable';
   import config from '@/config';
+  var sample = require('../backend/dust_pm1.js');
 
-
-  import sample from '@/backend/db_sample.js';
-
-
-
-  var ex = new sample('new');
-  var arr = ex.createArray();
-
-  function getData(){
-    var value = ex.createArray();
-    arr=value;
-    console.log(arr);
-  }
-  getData();
-
+  var arr = [1,2,3,4,5,6,7,8,9,10,11,12];
 
   export default {
     components: {

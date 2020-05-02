@@ -1,4 +1,4 @@
-var mysql = require('mysql');
+var mysql = require('sync-mysql');
 
 module.exports = function () {
     var config = require('./db_config');    // ./는 현재 디렉토리를 나타냅니다
