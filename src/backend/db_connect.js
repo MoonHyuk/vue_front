@@ -6,7 +6,8 @@ module.exports = function () {
         host: config.host,
         user: config.user,
         password: config.password,
-        database: config.database
+        database: config.database,
+        dateStrings: 'date'
     });
 
     return {
