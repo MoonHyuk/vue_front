@@ -28,7 +28,9 @@ export default {
   },
   methods: {
     updateGradients(chartData) {
-      if(!chartData) return;
+      if(!chartData) {
+        return;
+      }
       const ctx = this.ctx || document.getElementById(this.chartId).getContext('2d');
       const gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
 
