@@ -25,6 +25,7 @@
                            :checked="bigLineChart.activeIndex === index">
                     {{option}}
                   </label>
+                  
                 </div>
               </div>
             </div>
@@ -138,9 +139,39 @@
   import TaskList from './Dashboard/TaskList';
   import UserTable from './Dashboard/UserTable';
   import config from '@/config';
-  var sample = require('../backend/dust_pm1.js');
+  import axios from 'axios';
 
-  var arr = [1,2,3,4,5,6,7,8,9,10,11,12];
+  var array11=[1,1,1,1];
+  var arr = [0,0,0,0,0,0,0,0,0,0,0,0];
+
+  var async = require('async');
+  var array=[];
+
+    //axios 호출
+   function getdata(){
+      //var array=[];
+     
+      var db = require('./dbjoin');
+      
+      db.retrun_Data().then((result)=>{
+       
+       if(result){  
+         for (var i = 0; i < 12; i++)   //for문 안돌리면 undefined값이 return 됨
+            array.push(result[i]);
+       }
+      });
+      console.log(array);
+    
+      return array;
+  }
+
+  //reload 테스트용 작동 x
+  function time(){
+    console.log("time test");
+    //console.log(getdata());
+
+    //setInterval('time', 3000);
+  } 
 
   export default {
     components: {
@@ -149,14 +180,30 @@
       TaskList,
       UserTable
     },
-    data() {
+    async created() {
+         var db = require('./dbjoin');
+         var aaa=[];
+         await getdata();
+          // async.waterfall([
+          //     //arr = time(),
+          //   //setTimeout(data,2000),
+          //   //console.log("success: "+arr)
+          // ],console.err);
+          
+    },
+
+    data : function() {
+
       return {
+        //theArray:theArray,
         bigLineChart: {
           allData: [
-            arr,
-            [80, 120, 105, 110, 95, 105, 90, 100, 80, 95, 70, 120],
-            [60, 80, 65, 130, 80, 105, 90, 130, 70, 115, 60, 130]
+            array,
+            [100, 70, 1000, 70, 11015, 60, 11111, 60, 4220, 80, 110, 100],
+            [100, 70, 1000, 70, 11015, 60, 11111, 60, 4220, 80, 110, 100],
+            [100, 70, 1000, 70, 11015, 60, 11111, 60, 4220, 80, 110, 100]
           ],
+        
           activeIndex: 0,
           chartData: null,
           extraOptions: chartConfigs.purpleChartOptions,
@@ -165,6 +212,7 @@
           categories: []
         },
         vocLineChart: {
+          
           extraOptions: chartConfigs.purpleChartOptions,
           chartData: {
             labels: ['10시', '11시', '12시', '13시', '14시', '15시'],
@@ -303,6 +351,7 @@
         }
       }
     },
+    
     computed: {
       enableRTL() {
         return this.$route.query.enableRTL;
@@ -337,8 +386,17 @@
         this.$refs.bigChart.updateGradients(chartData);
         this.bigLineChart.chartData = chartData;
         this.bigLineChart.activeIndex = index;
+        
+      },
+
+      refreshChart(index){
+        setTimeout(() => {
+          console.log("refresh chart");
+          this.initBigChart(index);
+        },400);         //400밀리초 뒤에 chart refresh
       }
 
+      
     },
     mounted() {
       this.i18n = this.$i18n;
@@ -347,6 +405,11 @@
         this.$rtl.enableRTL();
       }
       this.initBigChart(0);
+      this.refreshChart(0);
+    
+      //this.refreshChart(0);
+      
+      
     },
     beforeDestroy() {
       if (this.$rtl.isRTL) {
