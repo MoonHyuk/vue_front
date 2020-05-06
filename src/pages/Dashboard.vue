@@ -139,39 +139,23 @@
   import TaskList from './Dashboard/TaskList';
   import UserTable from './Dashboard/UserTable';
   import config from '@/config';
-  import axios from 'axios';
-
-  var array11=[1,1,1,1];
-  var arr = [0,0,0,0,0,0,0,0,0,0,0,0];
 
   var async = require('async');
   var array=[];
 
     //axios 호출
    function getdata(){
-      //var array=[];
-     
       var db = require('./dbjoin');
-      
       db.retrun_Data().then((result)=>{
-       
-       if(result){  
+       if(result){
          for (var i = 0; i < 12; i++)   //for문 안돌리면 undefined값이 return 됨
             array.push(result[i]);
-       }
+         }
+
       });
       console.log(array);
-    
-      return array;
+     return array;
   }
-
-  //reload 테스트용 작동 x
-  function time(){
-    console.log("time test");
-    //console.log(getdata());
-
-    //setInterval('time', 3000);
-  } 
 
   export default {
     components: {
@@ -181,15 +165,7 @@
       UserTable
     },
     async created() {
-         var db = require('./dbjoin');
-         var aaa=[];
          await getdata();
-          // async.waterfall([
-          //     //arr = time(),
-          //   //setTimeout(data,2000),
-          //   //console.log("success: "+arr)
-          // ],console.err);
-          
     },
 
     data : function() {
@@ -199,9 +175,8 @@
         bigLineChart: {
           allData: [
             array,
-            [100, 70, 1000, 70, 11015, 60, 11111, 60, 4220, 80, 110, 100],
-            [100, 70, 1000, 70, 11015, 60, 11111, 60, 4220, 80, 110, 100],
-            [100, 70, 1000, 70, 11015, 60, 11111, 60, 4220, 80, 110, 100]
+            [100, 70, 100, 70, 100, 60, 500, 60, 120, 80, 110, 100],
+            [100, 70, 1000, 70, 11015, 60, 11111, 60, 4220, 80, 10, 50],
           ],
         
           activeIndex: 0,
@@ -404,11 +379,8 @@
         this.i18n.locale = 'ar';
         this.$rtl.enableRTL();
       }
-      this.initBigChart(0);
+      //this.initBigChart(0);
       this.refreshChart(0);
-    
-      //this.refreshChart(0);
-      
       
     },
     beforeDestroy() {
