@@ -146,23 +146,23 @@
     let init_refresh_time = 10; //자동 새로고침 시간 초기값 지정
 
     let number = 10;
-    let indexValue = 0;     //현재 보고 있는 탭의 index값 저장용 변수
+    let indexValue = 0;                        //현재 보고 있는 탭의 index값 저장용 변수
     let refresh_remain = init_refresh_time;    //새로고침까지 남은시간 변수
-    var refresh_set_timer;  //새로고침 타이머 저장 변수, set과 clear 하기 위해서 필요 
+    var refresh_set_timer;                     //새로고침 타이머 저장 변수, set과 clear 하기 위해서 필요 
 
     let async = require('async');
     let chartLabel = require('../backend/chartLabel'); // chart의 x축 시간 계산하여 return 해주는 모듈
 
-    let dust_1_Data = []; // dust_1 data 저장용 배열
-    let dust_25_Data = []; // dust_2.5 data 저장용 배열
-    let dust_10_Data = []; // dust_10 data 저장용 배열
+    let dust_1_Data = [];                       // dust_1 data 저장용 배열
+    let dust_25_Data = [];                      // dust_2.5 data 저장용 배열
+    let dust_10_Data = [];                      // dust_10 data 저장용 배열
 
 
     //data 호출 함수화
     function getData() {
-         dust_1_Data = []; // dust_1 data 저장용 배열 초기화
-         dust_25_Data = []; // dust_2.5 data 저장용 배열 초기화
-         dust_10_Data = []; // dust_10 data 저장용 배열 초기화
+         dust_1_Data = [];                      // dust_1 data 저장용 배열 초기화
+         dust_25_Data = [];                     // dust_2.5 data 저장용 배열 초기화
+         dust_10_Data = [];                     // dust_10 data 저장용 배열 초기화
 
          //await getDust1Data();
             var db = require('../backend/db_select');
@@ -200,7 +200,7 @@
         },
     
         beforeCreate(){
-            getData();      //create 전에 axios 데이터 호출
+            getData();                          //create 전에 axios 데이터 호출
         },
         beforeUpdate(){       
             clearTimeout(refresh_set_timer);    //timer 초기화
@@ -212,8 +212,8 @@
                      console.log("refresh timer "+this.refresh_remain);
                     this.bigLineChart.refresh_remain = this.refresh_remain;
                 
-                }else{          //refresh_remain이 0이 되었을때, 차트를 새로고침
-                    //데이터 초기화
+                }else{                          //refresh_remain이 0이 되었을때, 차트를 새로고침
+                    /* 데이터 초기화 */
                     getData();   
                     console.log("refresh chart num="+indexValue);
                     this.initBigChart(indexValue);
@@ -224,7 +224,7 @@
                             dust_10_Data
                     ];
                 
-                    //timer 초기화 
+                    /* timer 초기화 */ 
                      this.refresh_remain=init_refresh_time;
                      this.bigLineChart.refresh_remain = this.refresh_remain;
                 }                
@@ -236,7 +236,7 @@
         data: function () {
 
             return {
-                refresh_remain:refresh_remain,  //refresh까지 남은 시간
+                refresh_remain:refresh_remain,      //refresh까지 남은 시간 data
                 bigLineChart: {
                     allData: [
                         dust_1_Data,
@@ -427,7 +427,7 @@
                 this.bigLineChart.chartData = chartData;
                 this.bigLineChart.activeIndex = index;
 
-                indexValue = index;         //현재 누른 index 값을 전역 변수에 저장
+                indexValue = index;                                     //현재 누른 index 값을 전역 변수에 저장
                 this.refresh_remain = init_refresh_time;                //refresh_remain에 초기값 init_refresh_time 저장
                 this.bigLineChart.refresh_remain=this.refresh_remain;   //index 값이 바뀌면 새로고침 타이머도 초기화
 
@@ -437,7 +437,7 @@
                 setTimeout(() => {
                     console.log("refresh chart");
                     this.initBigChart(index);
-                }, 400);         //400밀리초 뒤에 chart refresh
+                }, 400);                                                //400밀리초 뒤에 chart refresh
             }
 
         },
