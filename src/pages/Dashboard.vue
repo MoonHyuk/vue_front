@@ -168,14 +168,14 @@
             var db = require('../backend/db_select');
             db.get_Con_dust('1').then((result) => {
                 if (result) {
-                    for (var i = 0; i < 12; i++)   //for문 안돌리면 undefined값이 return 됨
+                    for (var i = 0; i < 12; i++)    //for문 안돌리면 undefined값이 return 됨
                         dust_1_Data.push(result.data[i]);
                 }
             });
 
           db.get_Con_dust('25').then((result) => {
             if (result) {
-              for (var i = 0; i < 12; i++)   //for문 안돌리면 undefined값이 return 됨
+              for (var i = 0; i < 12; i++)          //for문 안돌리면 undefined값이 return 됨
                 dust_25_Data.push(result.data[i]);
             }
 
@@ -183,7 +183,7 @@
 
           db.get_Con_dust('10').then((result) => {
             if (result) {
-              for (var i = 0; i < 12; i++)   //for문 안돌리면 undefined값이 return 됨
+              for (var i = 0; i < 12; i++)          //for문 안돌리면 undefined값이 return 됨
                 dust_10_Data.push(result.data[i]);
             }
 
