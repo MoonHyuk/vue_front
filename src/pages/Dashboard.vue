@@ -142,8 +142,9 @@
     import TaskList from './Dashboard/TaskList';
     import UserTable from './Dashboard/UserTable';
     import config from '@/config';
+    import NotificationTemplate from './Notifications/NotificationTemplate';        //notification 내용 template
 
-    let init_refresh_time = 10; //자동 새로고침 시간 초기값 지정
+    let init_refresh_time = 10;                //자동 새로고침 시간 초기값 지정
 
     let number = 10;
     let indexValue = 0;                        //현재 보고 있는 탭의 index값 저장용 변수
@@ -188,6 +189,8 @@
             }
 
           });
+
+
     }
 
 
@@ -200,10 +203,10 @@
         },
     
         beforeCreate(){
-            getData();                          //create 전에 axios 데이터 호출
+            getData();                                          //create 전에 axios 데이터 호출
         },
         beforeUpdate(){       
-            clearTimeout(refresh_set_timer);    //timer 초기화
+            clearTimeout(refresh_set_timer);                    //timer 초기화
         },
         updated(){
             refresh_set_timer=setTimeout(() => {
@@ -212,12 +215,29 @@
                      console.log("refresh timer "+this.refresh_remain);
                     this.bigLineChart.refresh_remain = this.refresh_remain;
                 
-                }else{                          //refresh_remain이 0이 되었을때, 차트를 새로고침
+                }else{                                          //refresh_remain이 0이 되었을때, 차트를 새로고침
+
+                    /* 위험농도 넘을 시 notification, 배열 값 비교는 getData() 전에 해야 함 */
+                    if(dust_1_Data[11] > 5){                    //dust_1_Data의 최근 데이터가 기준값을 넘는지 확인
+                        this.notifyVue('top', 'center');        //위험 농도값을 넘어갔을 경우 noti 띄움
+                        this.initBigChart(0);                   //해당 차트를 표시
+                    }
+                    /*
+                    if(dust_10_Data[11] > 50){                  //dust_10_Data의 최근 데이터가 기준값을 넘는지 확인
+                        this.notifyVue('top', 'center');        //위험 농도값을 넘어갔을 경우 noti 띄움
+                        this.initBigChart(1);                   //해당 차트를 표시
+                    }    
+                    if(dust_25_Data[11] > 50){                  //dust_25_Data의 최근 데이터가 기준값을 넘는지 확인
+                        this.notifyVue('top', 'center');        //위험 농도값을 넘어갔을 경우 noti 띄움
+                        this.initBigChart(2);                   //해당 차트를 표시
+                    }
+                    */
+                    
+
                     /* 데이터 초기화 */
                     getData();   
                     console.log("refresh chart num="+indexValue);
                     this.initBigChart(indexValue);
-                    
                     this.bigLineChart.allData = [
                             dust_1_Data,
                             dust_25_Data,
@@ -237,6 +257,7 @@
 
             return {
                 refresh_remain:refresh_remain,      //refresh까지 남은 시간 data
+                type: ["", "info", "success", "warning", "danger"],     //noti용 type
                 bigLineChart: {
                     allData: [
                         dust_1_Data,
@@ -432,12 +453,22 @@
                 this.bigLineChart.refresh_remain=this.refresh_remain;   //index 값이 바뀌면 새로고침 타이머도 초기화
 
             },
-
             refreshChart(index) {
                 setTimeout(() => {
                     console.log("refresh chart");
                     this.initBigChart(index);
                 }, 400);                                                //400밀리초 뒤에 chart refresh
+            },
+            notifyVue(verticalAlign, horizontalAlign) {
+                const color = Math.floor(Math.random() * 4 + 1);
+                this.$notify({
+                    component: NotificationTemplate,                 //템플릿 내용 변경 가능 부분, ./Notifications/NotificationTemplate
+                    icon: "tim-icons icon-bell-55",                  //아이콘 모양
+                    horizontalAlign: horizontalAlign,
+                    verticalAlign: verticalAlign,
+                    type: this.type[color],                          //팝업창 색깔, info=blue, success=green ,warning=orange, danger=pink,
+                    timeout: 0                                       //팝업 떠 있는 시간(ms), 0초 = 무한
+                });
             }
 
         },
