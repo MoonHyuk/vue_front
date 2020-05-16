@@ -142,7 +142,7 @@
     import TaskList from './Dashboard/TaskList';
     import UserTable from './Dashboard/UserTable';
     import config from '@/config';
-    import NotificationTemplate from './Notifications/NotificationTemplate';        //notification 내용 template
+    import NotificationTemplate from './Notifications/NotificationTemplate';        //notification 내용 teㄴmplate
 
     let init_refresh_time = 10;                //자동 새로고침 시간 초기값 지정
 
@@ -193,6 +193,11 @@
 
     }
 
+    function sendAlarm(){
+        var fcm = require('../backend/fcm_sender');
+        fcm.fcm_sender();
+    }
+
 
     export default {
         components: {
@@ -221,6 +226,7 @@
                     if(dust_1_Data[11] > 5){                    //dust_1_Data의 최근 데이터가 기준값을 넘는지 확인
                         this.notifyVue('top', 'center');        //위험 농도값을 넘어갔을 경우 noti 띄움
                         this.initBigChart(0);                   //해당 차트를 표시
+                        sendAlarm();
                     }
                     /*
                     if(dust_10_Data[11] > 50){                  //dust_10_Data의 최근 데이터가 기준값을 넘는지 확인
