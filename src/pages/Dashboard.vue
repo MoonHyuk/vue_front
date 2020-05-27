@@ -163,50 +163,74 @@
     let co2_Label = [];                         // co2 label 저장용 배열
 
 
-    //data 호출 함수화
-    function getData() {
-         dust_1_Data = [];                      // dust_1 data 저장용 배열 초기화
-         dust_25_Data = [];                     // dust_2.5 data 저장용 배열 초기화
-         dust_10_Data = [];                     // dust_10 data 저장용 배열 초기화
+    function get_dust1(id,cb){
+        dust_1_Data = [1,2,3,4,5,6,7,7,8,9,9,11];                      // dust_1 data 저장용 배열 초기화
+        //var db = require('../backend/db_select');
+        // db.get_Con_dust('1').then((result) => {
+        //     if (result) {
+        //         for (var i = 0; i < 12; i++)    //for문 안돌리면 undefined값이 return 됨
+        //             dust_1_Data.push(result.data[i]);
+        //     }
+             cb(1);
+        // });
+    }
+
+    function get_dust10(id,cb){
+        dust_10_Data = [1,2,3,4,5,6,7,7,8,9,9,11];                      // dust_10 data 저장용 배열 초기화
+        //var db = require('../backend/db_select');
+        // db.get_Con_dust('1').then((result) => {
+        //     if (result) {
+        //         for (var i = 0; i < 12; i++)    //for문 안돌리면 undefined값이 return 됨
+        //             dust_1_Data.push(result.data[i]);
+        //     }
+             cb(1);
+        // });
+    }
+
+    function get_dust25(id,cb){
+        dust_25_Data = [1,2,3,4,5,6,7,7,8,9,9,11];                      // dust_25 data 저장용 배열 초기화
+        //var db = require('../backend/db_select');
+        // db.get_Con_dust('1').then((result) => {
+        //     if (result) {
+        //         for (var i = 0; i < 12; i++)    //for문 안돌리면 undefined값이 return 됨
+        //             dust_1_Data.push(result.data[i]);
+        //     }
+             cb(1);
+        // });
+    }
+
+    function getCo2CallBack(id, cb) {
          co2_Data = [];
-
-         //await getDust1Data();
-            var db = require('../backend/db_select');
-            db.get_Con_dust('1').then((result) => {
-                if (result) {
-                    for (var i = 0; i < 12; i++)    //for문 안돌리면 undefined값이 return 됨
-                        dust_1_Data.push(result.data[i]);
-                }
-            });
-
-          db.get_Con_dust('25').then((result) => {
-            if (result) {
-              for (var i = 0; i < 12; i++)          //for문 안돌리면 undefined값이 return 됨
-                dust_25_Data.push(result.data[i]);
-            }
-
-          });
-
-          db.get_Con_dust('10').then((result) => {
-            if (result) {
-              for (var i = 0; i < 12; i++)          //for문 안돌리면 undefined값이 return 됨
-                dust_10_Data.push(result.data[i]);
-            }
-
-          });
-
-        db.getCo2Live().then((result) => {
+         var db = require('../backend/db_select');
+         db.getCo2Live().then((result) => {
             if (result) {
                 for (var i = 0; i < 12; i++) {         //for문 안돌리면 undefined값이 return 됨
                     if(i%2===0){
                         co2_Data.push(result.data[i]);
+                        console.log(i+"result.data[i]=="+result.data[i]);
                     }
                 }
             }
+            cb(1)
+         });     
+    }
 
-        });
+    function getDataCallback(id,cb) {                                   //모든 데이터를 불러오는 콜백 함수
+        get_dust1(1, function (user) {
+                        console.log("callback 시작1");
+                        get_dust10(1, function (user) {
+                            console.log("callback 시작2");
+                            get_dust25(1, function (user) {
+                                console.log("callback 시작3");
+                                getCo2CallBack(1, function (user) {
+                                    console.log("callback 시작4");
+                                    cb(1);                              //모든 데이터 호출이 완료되었음
+                                    
+                                })
+                            })
 
-
+                        })
+        })
     }
 
     function sendAlarm(){
@@ -223,8 +247,11 @@
             UserTable
         },
     
-        beforeCreate(){
-            getData();                                          //create 전에 axios 데이터 호출
+        beforeCreate(){                                         //beforeCreate시에는 this 사용할 수 없음
+            //create 전에 axios 데이터 호출
+            getDataCallback(1, function (user) {
+                console.log("callback ");
+            });
         },
         beforeUpdate(){       
             clearTimeout(refresh_set_timer);                    //timer 초기화
@@ -238,9 +265,10 @@
                 
                 }
                 else{                                          //refresh_remain이 0이 되었을때, 차트를 새로고침
-
+                    
+                 
                     /* 위험농도 넘을 시 notification, 배열 값 비교는 getData() 전에 해야 함 */
-                    if(dust_1_Data[11] > 5){                    //dust_1_Data의 최근 데이터가 기준값을 넘는지 확인
+                    if(dust_1_Data[11] > 500){                    //dust_1_Data의 최근 데이터가 기준값을 넘는지 확인
                         this.notifyVue('top', 'center');        //위험 농도값을 넘어갔을 경우 noti 띄움
                         this.initBigChart(0);                   //해당 차트를 표시
                         sendAlarm();
@@ -258,21 +286,26 @@
                     
 
                     /* 데이터 초기화 */
-                    getData();   
-                    console.log("refresh chart num="+indexValue);
-                    this.initBigChart(indexValue);
-                    this.initCo2Chart();
+                    var that = this;                            //function 내에서 this를 쓸 수 없어서 미리 that에 선언
+                    getDataCallback(1, function (user) {        //get data 콜백
+                        that.initBigChart(indexValue);          //this대신 that으로 사용
+                        that.initCo2Chart();
+                        console.log("callback 지옥 끝");
+                    });
+                    
 
                     this.bigLineChart.allData = [
                             dust_1_Data,
                             dust_25_Data,
                             dust_10_Data
                     ];
-                    this.co2LineChart.chartData = co2_Data;
-                
+
+                    //this.co2LineChart.data = co2_Data;
+                    
                     /* timer 초기화 */ 
                      this.refresh_remain=init_refresh_time;
                      this.bigLineChart.refresh_remain = this.refresh_remain;
+
                 }                
             },1000);
 
@@ -472,6 +505,7 @@
                 this.$refs.bigChart.updateGradients(chartData);
                 this.bigLineChart.chartData = chartData;
                 this.bigLineChart.activeIndex = index;
+                console.log(this.bigLineChart.allData[index])
 
                 indexValue = index;                                     //현재 누른 index 값을 전역 변수에 저장
                 this.refresh_remain = init_refresh_time;                //refresh_remain에 초기값 init_refresh_time 저장
@@ -479,6 +513,7 @@
 
             },
             initCo2Chart(){
+    
                 let chartData =  {
                     labels: chartLabel.labelRecent(6),
                         datasets: [{
@@ -495,11 +530,14 @@
                         pointHoverRadius: 4,
                         pointHoverBorderWidth: 15,
                         pointRadius: 4,
-                        data: co2_Data,
+                        data: co2_Data
                     }]
                 }
                 this.$refs.co2LineChart.updateGradients(chartData);
                 this.co2LineChart.chartData = chartData;
+
+                //this.refreshChart(0);
+                console.log("initco2chart="+co2_Data);
             },
             refreshChart(index) {
                 setTimeout(() => {
