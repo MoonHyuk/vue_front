@@ -90,6 +90,7 @@
                     </template>
                     <div class="chart-area">
                         <line-chart style="height: 100%"
+                                    ref="co2LineChart"
                                     chart-id="purple-line-chart"
                                     :chart-data="co2LineChart.chartData"
                                     :gradient-colors="co2LineChart.gradientColors"
@@ -157,6 +158,9 @@
     let dust_1_Data = [];                       // dust_1 data 저장용 배열
     let dust_25_Data = [];                      // dust_2.5 data 저장용 배열
     let dust_10_Data = [];                      // dust_10 data 저장용 배열
+    let co2_Data = [];                          // co2 data 저장용 배열
+
+    let co2_Label = [];                         // co2 label 저장용 배열
 
 
     //data 호출 함수화
@@ -164,6 +168,7 @@
          dust_1_Data = [];                      // dust_1 data 저장용 배열 초기화
          dust_25_Data = [];                     // dust_2.5 data 저장용 배열 초기화
          dust_10_Data = [];                     // dust_10 data 저장용 배열 초기화
+         co2_Data = [];
 
          //await getDust1Data();
             var db = require('../backend/db_select');
@@ -189,6 +194,17 @@
             }
 
           });
+
+        db.getCo2Live().then((result) => {
+            if (result) {
+                for (var i = 0; i < 12; i++) {         //for문 안돌리면 undefined값이 return 됨
+                    if(i%2===0){
+                        co2_Data.push(result.data[i]);
+                    }
+                }
+            }
+
+        });
 
 
     }
@@ -220,7 +236,8 @@
                      console.log("refresh timer "+this.refresh_remain);
                     this.bigLineChart.refresh_remain = this.refresh_remain;
                 
-                }else{                                          //refresh_remain이 0이 되었을때, 차트를 새로고침
+                }
+                else{                                          //refresh_remain이 0이 되었을때, 차트를 새로고침
 
                     /* 위험농도 넘을 시 notification, 배열 값 비교는 getData() 전에 해야 함 */
                     if(dust_1_Data[11] > 5){                    //dust_1_Data의 최근 데이터가 기준값을 넘는지 확인
@@ -244,11 +261,14 @@
                     getData();   
                     console.log("refresh chart num="+indexValue);
                     this.initBigChart(indexValue);
+                    this.initCo2Chart();
+
                     this.bigLineChart.allData = [
                             dust_1_Data,
                             dust_25_Data,
                             dust_10_Data
                     ];
+                    this.co2LineChart.chartData = co2_Data;
                 
                     /* timer 초기화 */ 
                      this.refresh_remain=init_refresh_time;
@@ -331,7 +351,7 @@
                     chartData: {
                         labels: chartLabel.labelRecent(6),
                         datasets: [{
-                            label: "Data",
+                            label: "PPM",
                             fill: true,
                             borderColor: config.colors.primary,
                             borderWidth: 2,
@@ -344,7 +364,7 @@
                             pointHoverRadius: 4,
                             pointHoverBorderWidth: 15,
                             pointRadius: 4,
-                            data: [10, 20, 80, 70, 30, 13],
+                            data: co2_Data,
                         }]
                     },
                     gradientColors: config.colors.primaryGradient,
@@ -431,7 +451,6 @@
         },
         methods: {
             initBigChart(index) {
-
                 let chartData = {
                     datasets: [{
                         fill: true,
@@ -459,11 +478,35 @@
                 this.bigLineChart.refresh_remain=this.refresh_remain;   //index 값이 바뀌면 새로고침 타이머도 초기화
 
             },
+            initCo2Chart(){
+                let chartData =  {
+                    labels: chartLabel.labelRecent(6),
+                        datasets: [{
+                        label: "PPM",
+                        fill: true,
+                        borderColor: config.colors.primary,
+                        borderWidth: 2,
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        pointBackgroundColor: config.colors.primary,
+                        pointBorderColor: 'rgba(255,255,255,0)',
+                        pointHoverBackgroundColor: config.colors.primary,
+                        pointBorderWidth: 20,
+                        pointHoverRadius: 4,
+                        pointHoverBorderWidth: 15,
+                        pointRadius: 4,
+                        data: co2_Data,
+                    }]
+                }
+                this.$refs.co2LineChart.updateGradients(chartData);
+                this.co2LineChart.chartData = chartData;
+            },
             refreshChart(index) {
                 setTimeout(() => {
                     console.log("refresh chart");
                     this.initBigChart(index);
-                }, 400);                                                //400밀리초 뒤에 chart refresh
+                    this.initCo2Chart();
+                }, 500);                                                //400밀리초 뒤에 chart refresh
             },
             notifyVue(verticalAlign, horizontalAlign) {
                 const color = Math.floor(Math.random() * 4 + 1);
