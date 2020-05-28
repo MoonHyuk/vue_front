@@ -6,14 +6,15 @@
                 <card type="chart">
                     <template slot="header">
                         <div class="row">
-                            
+
                             <div class="col-sm-6" :class="isRTL ? 'text-right' : 'text-left'">
                                 <h5 class="card-category">{{$t('dashboard.totalShipments')}}</h5>
                                 <h2 class="card-title">{{$t('dashboard.FineDust')}}</h2>
-                               
+
                             </div>
                             <div class="col-sm-6">
-                                 <span id="timer" style="float:right; margin-right:5px">{{ refresh_remain }} 초 후 새로고침</span><br/>
+                                <span id="timer"
+                                      style="float:right; margin-right:5px">{{ refresh_remain }} 초 후 새로고침</span><br/>
                                 <div class="btn-group btn-group-toggle"
                                      :class="isRTL ? 'float-left' : 'float-right'"
                                      data-toggle="buttons">
@@ -28,7 +29,7 @@
                                                :checked="bigLineChart.activeIndex === index">
                                         {{option}}
                                     </label>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -145,9 +146,8 @@
     import config from '@/config';
     import NotificationTemplate from './Notifications/NotificationTemplate';        //notification 내용 teㄴmplate
 
-    let init_refresh_time = 10;                //자동 새로고침 시간 초기값 지정
+    let init_refresh_time = 5;                //자동 새로고침 시간 초기값 지정
 
-    let number = 10;
     let indexValue = 0;                        //현재 보고 있는 탭의 index값 저장용 변수
     let refresh_remain = init_refresh_time;    //새로고침까지 남은시간 변수
     var refresh_set_timer;                     //새로고침 타이머 저장 변수, set과 clear 하기 위해서 필요 
@@ -163,77 +163,62 @@
     let co2_Label = [];                         // co2 label 저장용 배열
 
 
-    function get_dust1(id,cb){
-        dust_1_Data = [1,2,3,4,5,6,7,7,8,9,9,11];                      // dust_1 data 저장용 배열 초기화
+    function get_dust1() {
+        dust_1_Data = [1, 2, 3, 4, 5, 6, 7, 7, 8, 9, 9, 11];                      // dust_1 data 저장용 배열 초기화
         //var db = require('../backend/db_select');
         // db.get_Con_dust('1').then((result) => {
         //     if (result) {
         //         for (var i = 0; i < 12; i++)    //for문 안돌리면 undefined값이 return 됨
         //             dust_1_Data.push(result.data[i]);
         //     }
-             cb(1);
         // });
     }
 
-    function get_dust10(id,cb){
-        dust_10_Data = [1,2,3,4,5,6,7,7,8,9,9,11];                      // dust_10 data 저장용 배열 초기화
+    function get_dust10() {
+        dust_10_Data = [1, 2, 3, 4, 5, 6, 7, 7, 8, 9, 9, 11];                      // dust_10 data 저장용 배열 초기화
         //var db = require('../backend/db_select');
         // db.get_Con_dust('1').then((result) => {
         //     if (result) {
         //         for (var i = 0; i < 12; i++)    //for문 안돌리면 undefined값이 return 됨
         //             dust_1_Data.push(result.data[i]);
         //     }
-             cb(1);
         // });
     }
 
-    function get_dust25(id,cb){
-        dust_25_Data = [1,2,3,4,5,6,7,7,8,9,9,11];                      // dust_25 data 저장용 배열 초기화
+    function get_dust25() {
+        dust_25_Data = [1, 2, 3, 4, 5, 6, 7, 7, 8, 9, 9, 11];                      // dust_25 data 저장용 배열 초기화
         //var db = require('../backend/db_select');
         // db.get_Con_dust('1').then((result) => {
         //     if (result) {
         //         for (var i = 0; i < 12; i++)    //for문 안돌리면 undefined값이 return 됨
         //             dust_1_Data.push(result.data[i]);
         //     }
-             cb(1);
         // });
     }
 
-    function getCo2CallBack(id, cb) {
-         co2_Data = [];
-         var db = require('../backend/db_select');
-         db.getCo2Live().then((result) => {
+    async function getCo2CallBack() {
+        co2_Data = [];
+        var db = require('../backend/db_select');
+        await db.getCo2Live().then((result) => {
             if (result) {
                 for (var i = 0; i < 12; i++) {         //for문 안돌리면 undefined값이 return 됨
-                    if(i%2===0){
+                    if (i % 2 === 0) {
                         co2_Data.push(result.data[i]);
-                        console.log(i+"result.data[i]=="+result.data[i]);
+                        console.log(i + "result.data[i]==" + result.data[i]);
                     }
                 }
             }
-            cb(1)
-         });     
+        });
     }
 
-    function getDataCallback(id,cb) {                                   //모든 데이터를 불러오는 콜백 함수
-        get_dust1(1, function (user) {
-                        console.log("callback 시작1");
-                        get_dust10(1, function (user) {
-                            console.log("callback 시작2");
-                            get_dust25(1, function (user) {
-                                console.log("callback 시작3");
-                                getCo2CallBack(1, function (user) {
-                                    console.log("callback 시작4");
-                                    cb(1);                              //모든 데이터 호출이 완료되었음
-                                    
-                                })
-                            })
-
-                        })
-        })
+    async function getDataCallback() {                                   //모든 데이터를 불러오는 콜백 함수
+        await get_dust1();
+        await get_dust10();
+        await get_dust25();
+        await getCo2CallBack();
     }
 
-    function sendAlarm(){
+    function sendAlarm() {
         var fcm = require('../backend/fcm_sender');
         fcm.fcm_sender();
     }
@@ -246,29 +231,26 @@
             TaskList,
             UserTable
         },
-    
-        beforeCreate(){                                         //beforeCreate시에는 this 사용할 수 없음
+
+        beforeCreate() {                                         //beforeCreate시에는 this 사용할 수 없음
             //create 전에 axios 데이터 호출
-            getDataCallback(1, function (user) {
-                console.log("callback ");
-            });
+            getDataCallback();
         },
-        beforeUpdate(){       
+        beforeUpdate() {
             clearTimeout(refresh_set_timer);                    //timer 초기화
         },
-        updated(){
-            refresh_set_timer=setTimeout(() => {
-                if(this.refresh_remain>1){
+        updated() {
+            refresh_set_timer = setTimeout(async () => {
+                if (this.refresh_remain > 1) {
                     this.refresh_remain--;
-                     console.log("refresh timer "+this.refresh_remain);
+                    console.log("refresh timer " + this.refresh_remain);
                     this.bigLineChart.refresh_remain = this.refresh_remain;
-                
-                }
-                else{                                          //refresh_remain이 0이 되었을때, 차트를 새로고침
-                    
-                 
+
+                } else {                                          //refresh_remain이 0이 되었을때, 차트를 새로고침
+
+
                     /* 위험농도 넘을 시 notification, 배열 값 비교는 getData() 전에 해야 함 */
-                    if(dust_1_Data[11] > 500){                    //dust_1_Data의 최근 데이터가 기준값을 넘는지 확인
+                    if (dust_1_Data[11] > 500) {                    //dust_1_Data의 최근 데이터가 기준값을 넘는지 확인
                         this.notifyVue('top', 'center');        //위험 농도값을 넘어갔을 경우 noti 띄움
                         this.initBigChart(0);                   //해당 차트를 표시
                         sendAlarm();
@@ -277,37 +259,37 @@
                     if(dust_10_Data[11] > 50){                  //dust_10_Data의 최근 데이터가 기준값을 넘는지 확인
                         this.notifyVue('top', 'center');        //위험 농도값을 넘어갔을 경우 noti 띄움
                         this.initBigChart(1);                   //해당 차트를 표시
-                    }    
+                    }
                     if(dust_25_Data[11] > 50){                  //dust_25_Data의 최근 데이터가 기준값을 넘는지 확인
                         this.notifyVue('top', 'center');        //위험 농도값을 넘어갔을 경우 noti 띄움
                         this.initBigChart(2);                   //해당 차트를 표시
                     }
                     */
-                    
+
 
                     /* 데이터 초기화 */
                     var that = this;                            //function 내에서 this를 쓸 수 없어서 미리 that에 선언
-                    getDataCallback(1, function (user) {        //get data 콜백
-                        that.initBigChart(indexValue);          //this대신 that으로 사용
-                        that.initCo2Chart();
-                        console.log("callback 지옥 끝");
-                    });
-                    
+                    await getDataCallback();
+                    //get data 콜백
+                    await that.initBigChart(indexValue);          //this대신 that으로 사용
+                    await that.initCo2Chart();
+                    console.log("callback 지옥 끝");
+
 
                     this.bigLineChart.allData = [
-                            dust_1_Data,
-                            dust_25_Data,
-                            dust_10_Data
+                        dust_1_Data,
+                        dust_25_Data,
+                        dust_10_Data
                     ];
 
                     //this.co2LineChart.data = co2_Data;
-                    
-                    /* timer 초기화 */ 
-                     this.refresh_remain=init_refresh_time;
-                     this.bigLineChart.refresh_remain = this.refresh_remain;
 
-                }                
-            },1000);
+                    /* timer 초기화 */
+                    this.refresh_remain = init_refresh_time;
+                    this.bigLineChart.refresh_remain = this.refresh_remain;
+
+                }
+            }, 1000);
 
         },
 
@@ -315,7 +297,7 @@
         data: function () {
 
             return {
-                refresh_remain:refresh_remain,      //refresh까지 남은 시간 data
+                refresh_remain: refresh_remain,      //refresh까지 남은 시간 data
                 type: ["", "info", "success", "warning", "danger"],     //noti용 type
                 bigLineChart: {
                     allData: [
@@ -509,14 +491,13 @@
 
                 indexValue = index;                                     //현재 누른 index 값을 전역 변수에 저장
                 this.refresh_remain = init_refresh_time;                //refresh_remain에 초기값 init_refresh_time 저장
-                this.bigLineChart.refresh_remain=this.refresh_remain;   //index 값이 바뀌면 새로고침 타이머도 초기화
+                this.bigLineChart.refresh_remain = this.refresh_remain;   //index 값이 바뀌면 새로고침 타이머도 초기화
 
             },
-            initCo2Chart(){
-    
-                let chartData =  {
+            initCo2Chart() {
+                let chartData = {
                     labels: chartLabel.labelRecent(6),
-                        datasets: [{
+                    datasets: [{
                         label: "PPM",
                         fill: true,
                         borderColor: config.colors.primary,
@@ -537,7 +518,7 @@
                 this.co2LineChart.chartData = chartData;
 
                 //this.refreshChart(0);
-                console.log("initco2chart="+co2_Data);
+                console.log("initco2chart=" + co2_Data);
             },
             refreshChart(index) {
                 setTimeout(() => {
