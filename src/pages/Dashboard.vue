@@ -176,20 +176,30 @@
     var refresh_set_timer;                     //새로고침 타이머 저장 변수, set과 clear 하기 위해서 필요 
 
     let async = require('async');
-    let chartLabel = require('../backend/chartLabel'); // chart의 x축 시간 계산하여 return 해주는 모듈
 
     let dust_1_Data = [];                       // dust_1 data 저장용 배열
     let dust_25_Data = [];                      // dust_2.5 data 저장용 배열
     let dust_10_Data = [];                      // dust_10 data 저장용 배열
     let co2_Data = [];                          // co2 data 저장용 배열
-    let o2_Data = [];                          // co2 data 저장용 배열
-    let toluene_Data = [];                          // co2 data 저장용 배열
-    let voc_Data = [];                          // co2 data 저장용 배열
+    let o2_Data = [];                          // o2 data 저장용 배열
+    let toluene_Data = [];                          // toluene data 저장용 배열
+    let voc_Data = [];                          // voc data 저장용 배열
+
+    let dust_Label=[[],[],[]];
+    let dust_1_Label = [];                       // dust_1 Label 저장용 배열
+    let dust_25_Label = [];                      // dust_2.5 Label 저장용 배열
+    let dust_10_Label = [];                      // dust_10 Label 저장용 배열
+    let co2_Label = [];                          // co2 Label 저장용 배열
+    let o2_Label = [];                          // o2 Label 저장용 배열
+    let toluene_Label = [];                          // toluene Label 저장용 배열
+    let voc_Label = [];                          // voc Label 저장용 배열
 
 
 
     async function get_dust1() {
         dust_1_Data = [];
+        dust_1_Label = [];
+
         var db = require('../backend/db_select');
         await db.getPm1Live().then((result) => {
             if (result) {
@@ -197,15 +207,24 @@
                     if (i % 2 === 0) {
                         dust_1_Data.push(result.data[i]);
                     }
+                    else{
+                        dust_1_Label.push(result.data[i].substr(11,8));
+                    }
                 }
             }
         });
         dust_1_Data=dust_1_Data.reverse();
+        dust_1_Label=dust_1_Label.reverse();
+
+        dust_Label[0]=dust_1_Label;
+
         console.log("dust_1_Data",dust_1_Data);
     }
 
     async function get_dust10() {
         dust_10_Data = [];
+        dust_10_Label = [];
+
         var db = require('../backend/db_select');
         await db.getPm10Live().then((result) => {
             if (result) {
@@ -213,15 +232,24 @@
                     if (i % 2 === 0) {
                         dust_10_Data.push(result.data[i]);
                     }
+                    else{
+                        dust_10_Label.push(result.data[i].substr(11,8));
+                    }
                 }
             }
         });
         dust_10_Data=dust_10_Data.reverse();
+        dust_10_Label=dust_10_Label.reverse();
+
+        dust_Label[2]=dust_10_Label;
+
         console.log("dust_10_Data",dust_10_Data);
     }
 
     async function get_dust25() {
         dust_25_Data = [];
+        dust_25_Label = [];
+
         var db = require('../backend/db_select');
         await db.getPm25Live().then((result) => {
             if (result) {
@@ -229,15 +257,24 @@
                     if (i % 2 === 0) {
                         dust_25_Data.push(result.data[i]);
                     }
+                    else{
+                        dust_25_Label.push(result.data[i].substr(11,8));
+                    }
                 }
             }
         });
         dust_25_Data=dust_25_Data.reverse();
+        dust_25_Label=dust_25_Label.reverse();
+
+        dust_Label[1]=dust_25_Label;
+
         console.log("dust_25_Data",dust_25_Data);
     }
 
     async function getCo2CallBack() {
         co2_Data = [];
+        co2_Label = [];
+
         var db = require('../backend/db_select');
         await db.getCo2Live().then((result) => {
             if (result) {
@@ -245,16 +282,23 @@
                     if (i % 2 === 0) {
                         co2_Data.push(result.data[i]);
                     }
+                    else{
+                        co2_Label.push(result.data[i].substr(11,8));
+                    }
                 }
             }
         });
         co2_Data=co2_Data.reverse();
+        co2_Label=co2_Label.reverse();
+
         console.log("co2_Data",co2_Data);
 
     }
 
     async function getTolueneCallBack() {
         toluene_Data = [];
+        toluene_Label = [];
+
         var db = require('../backend/db_select');
         await db.getTolueneLive().then((result) => {
             if (result) {
@@ -262,16 +306,23 @@
                     if (i % 2 === 0) {
                         toluene_Data.push(result.data[i]);
                     }
+                    else{
+                        toluene_Label.push(result.data[i].substr(11,8));
+                    }
                 }
             }
         });
         toluene_Data=toluene_Data.reverse();
+        toluene_Label=toluene_Label.reverse();
+
         console.log("toluene_Data",toluene_Data);
 
     }
 
     async function getO2CallBack() {
         o2_Data = [];
+        o2_Label = [];
+
         var db = require('../backend/db_select');
         await db.getO2Live().then((result) => {
             if (result) {
@@ -279,16 +330,22 @@
                     if (i % 2 === 0) {
                         o2_Data.push(result.data[i]);
                     }
+                    else{
+                        o2_Label.push(result.data[i].substr(11,8));
+                    }
                 }
             }
         });
         o2_Data=o2_Data.reverse();
+        o2_Label=o2_Label.reverse();
+
         console.log("o2_Data",o2_Data);
 
     }
 
     async function getVocCallBack() {
         voc_Data = [];
+        voc_Label = [];
         var db = require('../backend/db_select');
         await db.getVocLive().then((result) => {
             if (result) {
@@ -296,11 +353,18 @@
                     if (i % 2 === 0) {
                         voc_Data.push(result.data[i]);
                     }
+                    else{
+                        voc_Label.push(result.data[i].substr(11,8));
+                    }
+
                 }
             }
         });
         voc_Data=voc_Data.reverse();
+        voc_Label=voc_Label.reverse();
+
         console.log("voc_Data",voc_Data);
+
 
     }
 
@@ -428,9 +492,9 @@
                 vocLineChart: {
                     extraOptions: chartConfigs.purpleChartOptions,
                     chartData: {
-                        labels: chartLabel.labelRecent(6),
+                        labels: voc_Label,
                         datasets: [{
-                            label: "PPM",
+                            label: "ppb",
                             fill: true,
                             borderColor: config.colors.primary,
                             borderWidth: 2,
@@ -452,9 +516,9 @@
                 o2LineChart: {
                     extraOptions: chartConfigs.purpleChartOptions,
                     chartData: {
-                        labels: chartLabel.labelRecent(6),
+                        labels: o2_Label,
                         datasets: [{
-                            label: "PPM",
+                            label: "ppm",
                             fill: true,
                             borderColor: config.colors.primary,
                             borderWidth: 2,
@@ -476,9 +540,9 @@
                 co2LineChart: {
                     extraOptions: chartConfigs.purpleChartOptions,
                     chartData: {
-                        labels: chartLabel.labelRecent(6),
+                        labels: co2_Label,
                         datasets: [{
-                            label: "PPM",
+                            label: "ppm",
                             fill: true,
                             borderColor: config.colors.primary,
                             borderWidth: 2,
@@ -500,9 +564,9 @@
                 tolueneLineChart: {
                     extraOptions: chartConfigs.purpleChartOptions,
                     chartData: {
-                        labels: chartLabel.labelRecent(6),
+                        labels: toluene_Label,
                         datasets: [{
-                            label: "PPM",
+                            label: "ppm",
                             fill: true,
                             borderColor: config.colors.primary,
                             borderWidth: 2,
@@ -618,7 +682,7 @@
                         pointRadius: 4,
                         data: this.bigLineChart.allData[index]
                     }],
-                    labels: chartLabel.labelRecent(12),
+                    labels: dust_Label[index],
                 }
                 this.$refs.bigChart.updateGradients(chartData);
                 this.bigLineChart.chartData = chartData;
@@ -631,9 +695,9 @@
             },
             initCo2Chart() {
                 let chartData = {
-                    labels: chartLabel.labelRecent(6),
+                    labels: co2_Label,
                     datasets: [{
-                        label: "PPM",
+                        label: "ppm",
                         fill: true,
                         borderColor: config.colors.primary,
                         borderWidth: 2,
@@ -655,9 +719,9 @@
             },
             initTolueneChart() {
                 let chartData = {
-                    labels: chartLabel.labelRecent(6),
+                    labels: toluene_Label,
                     datasets: [{
-                        label: "PPM",
+                        label: "ppm",
                         fill: true,
                         borderColor: config.colors.primary,
                         borderWidth: 2,
@@ -679,9 +743,9 @@
 
             initO2Chart() {
                 let chartData = {
-                    labels: chartLabel.labelRecent(6),
+                    labels: o2_Label,
                     datasets: [{
-                        label: "PPM",
+                        label: "ppm",
                         fill: true,
                         borderColor: config.colors.primary,
                         borderWidth: 2,
@@ -703,9 +767,9 @@
 
             initVocChart() {
                 let chartData = {
-                    labels: chartLabel.labelRecent(6),
+                    labels: voc_Label,
                     datasets: [{
-                        label: "PPM",
+                        label: "ppb",
                         fill: true,
                         borderColor: config.colors.primary,
                         borderWidth: 2,
