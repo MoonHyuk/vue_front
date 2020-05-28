@@ -52,10 +52,11 @@
                 <card type="chart">
                     <template slot="header">
                         <h5 class="card-category">{{$t('dashboard.totalShipments')}}</h5>
-                        <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>VOC 32.22 PPM</h3>
+                        <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>TVOC {{vocValue}} ppb</h3>
                     </template>
                     <div class="chart-area">
                         <line-chart style="height: 100%"
+                                    ref="vocLineChart"
                                     chart-id="purple-line-chart"
                                     :chart-data="vocLineChart.chartData"
                                     :gradient-colors="vocLineChart.gradientColors"
@@ -69,10 +70,11 @@
                 <card type="chart">
                     <template slot="header">
                         <h5 class="card-category">{{$t('dashboard.totalShipments')}}</h5>
-                        <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>O2 21.8%</h3>
+                        <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>O2 {{o2Value}} ppm</h3>
                     </template>
                     <div class="chart-area">
                         <line-chart style="height: 100%"
+                                    ref="o2LineChart"
                                     chart-id="purple-line-chart"
                                     :chart-data="o2LineChart.chartData"
                                     :gradient-colors="o2LineChart.gradientColors"
@@ -87,7 +89,7 @@
                 <card type="chart">
                     <template slot="header">
                         <h5 class="card-category">{{$t('dashboard.totalShipments')}}</h5>
-                        <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>CO2 1300 PPM</h3>
+                        <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>CO2 {{co2Value}} ppm</h3>
                     </template>
                     <div class="chart-area">
                         <line-chart style="height: 100%"
@@ -101,9 +103,30 @@
                     </div>
                 </card>
             </div>
+        </div>
 
+        <div class="row">
+            <div class="col-lg-4" :class="{'text-right': isRTL}">
+                <card type="chart">
+                    <template slot="header">
+                        <h5 class="card-category">{{$t('dashboard.totalShipments')}}</h5>
+                        <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>TOLUENE {{tolueneValue}} ppm</h3>
+                    </template>
+                    <div class="chart-area">
+                        <line-chart style="height: 100%"
+                                    ref="tolueneLineChart"
+                                    chart-id="purple-line-chart"
+                                    :chart-data="tolueneLineChart.chartData"
+                                    :gradient-colors="tolueneLineChart.gradientColors"
+                                    :gradient-stops="tolueneLineChart.gradientStops"
+                                    :extra-options="tolueneLineChart.extraOptions">
+                        </line-chart>
+                    </div>
+                </card>
+            </div>
 
         </div>
+
         <div class="row">
             <div class="col-lg-6 col-md-12">
                 <card type="tasks" :header-classes="{'text-right': isRTL}">
@@ -153,62 +176,196 @@
     var refresh_set_timer;                     //새로고침 타이머 저장 변수, set과 clear 하기 위해서 필요 
 
     let async = require('async');
-    let chartLabel = require('../backend/chartLabel'); // chart의 x축 시간 계산하여 return 해주는 모듈
 
     let dust_1_Data = [];                       // dust_1 data 저장용 배열
     let dust_25_Data = [];                      // dust_2.5 data 저장용 배열
     let dust_10_Data = [];                      // dust_10 data 저장용 배열
     let co2_Data = [];                          // co2 data 저장용 배열
+    let o2_Data = [];                          // o2 data 저장용 배열
+    let toluene_Data = [];                          // toluene data 저장용 배열
+    let voc_Data = [];                          // voc data 저장용 배열
 
-    let co2_Label = [];                         // co2 label 저장용 배열
+    let dust_Label=[[],[],[]];
+    let dust_1_Label = [];                       // dust_1 Label 저장용 배열
+    let dust_25_Label = [];                      // dust_2.5 Label 저장용 배열
+    let dust_10_Label = [];                      // dust_10 Label 저장용 배열
+    let co2_Label = [];                          // co2 Label 저장용 배열
+    let o2_Label = [];                          // o2 Label 저장용 배열
+    let toluene_Label = [];                          // toluene Label 저장용 배열
+    let voc_Label = [];                          // voc Label 저장용 배열
 
 
-    function get_dust1() {
-        dust_1_Data = [1, 2, 3, 4, 5, 6, 7, 7, 8, 9, 9, 11];                      // dust_1 data 저장용 배열 초기화
-        //var db = require('../backend/db_select');
-        // db.get_Con_dust('1').then((result) => {
-        //     if (result) {
-        //         for (var i = 0; i < 12; i++)    //for문 안돌리면 undefined값이 return 됨
-        //             dust_1_Data.push(result.data[i]);
-        //     }
-        // });
+
+    async function get_dust1() {
+        dust_1_Data = [];
+        dust_1_Label = [];
+
+        var db = require('../backend/db_select');
+        await db.getPm1Live().then((result) => {
+            if (result) {
+                for (var i = 0; i < 24; i++) {         //for문 안돌리면 undefined값이 return 됨
+                    if (i % 2 === 0) {
+                        dust_1_Data.push(result.data[i]);
+                    }
+                    else{
+                        dust_1_Label.push(result.data[i].substr(11,8));
+                    }
+                }
+            }
+        });
+        dust_1_Data=dust_1_Data.reverse();
+        dust_1_Label=dust_1_Label.reverse();
+
+        dust_Label[0]=dust_1_Label;
+
+        console.log("dust_1_Data",dust_1_Data);
     }
 
-    function get_dust10() {
-        dust_10_Data = [1, 2, 3, 4, 5, 6, 7, 7, 8, 9, 9, 11];                      // dust_10 data 저장용 배열 초기화
-        //var db = require('../backend/db_select');
-        // db.get_Con_dust('1').then((result) => {
-        //     if (result) {
-        //         for (var i = 0; i < 12; i++)    //for문 안돌리면 undefined값이 return 됨
-        //             dust_1_Data.push(result.data[i]);
-        //     }
-        // });
+    async function get_dust10() {
+        dust_10_Data = [];
+        dust_10_Label = [];
+
+        var db = require('../backend/db_select');
+        await db.getPm10Live().then((result) => {
+            if (result) {
+                for (var i = 0; i < 24; i++) {         //for문 안돌리면 undefined값이 return 됨
+                    if (i % 2 === 0) {
+                        dust_10_Data.push(result.data[i]);
+                    }
+                    else{
+                        dust_10_Label.push(result.data[i].substr(11,8));
+                    }
+                }
+            }
+        });
+        dust_10_Data=dust_10_Data.reverse();
+        dust_10_Label=dust_10_Label.reverse();
+
+        dust_Label[2]=dust_10_Label;
+
+        console.log("dust_10_Data",dust_10_Data);
     }
 
-    function get_dust25() {
-        dust_25_Data = [1, 2, 3, 4, 5, 6, 7, 7, 8, 9, 9, 11];                      // dust_25 data 저장용 배열 초기화
-        //var db = require('../backend/db_select');
-        // db.get_Con_dust('1').then((result) => {
-        //     if (result) {
-        //         for (var i = 0; i < 12; i++)    //for문 안돌리면 undefined값이 return 됨
-        //             dust_1_Data.push(result.data[i]);
-        //     }
-        // });
+    async function get_dust25() {
+        dust_25_Data = [];
+        dust_25_Label = [];
+
+        var db = require('../backend/db_select');
+        await db.getPm25Live().then((result) => {
+            if (result) {
+                for (var i = 0; i < 24; i++) {         //for문 안돌리면 undefined값이 return 됨
+                    if (i % 2 === 0) {
+                        dust_25_Data.push(result.data[i]);
+                    }
+                    else{
+                        dust_25_Label.push(result.data[i].substr(11,8));
+                    }
+                }
+            }
+        });
+        dust_25_Data=dust_25_Data.reverse();
+        dust_25_Label=dust_25_Label.reverse();
+
+        dust_Label[1]=dust_25_Label;
+
+        console.log("dust_25_Data",dust_25_Data);
     }
 
     async function getCo2CallBack() {
         co2_Data = [];
+        co2_Label = [];
+
         var db = require('../backend/db_select');
         await db.getCo2Live().then((result) => {
             if (result) {
                 for (var i = 0; i < 12; i++) {         //for문 안돌리면 undefined값이 return 됨
                     if (i % 2 === 0) {
                         co2_Data.push(result.data[i]);
-                        console.log(i + "result.data[i]==" + result.data[i]);
+                    }
+                    else{
+                        co2_Label.push(result.data[i].substr(11,8));
                     }
                 }
             }
         });
+        co2_Data=co2_Data.reverse();
+        co2_Label=co2_Label.reverse();
+
+        console.log("co2_Data",co2_Data);
+
+    }
+
+    async function getTolueneCallBack() {
+        toluene_Data = [];
+        toluene_Label = [];
+
+        var db = require('../backend/db_select');
+        await db.getTolueneLive().then((result) => {
+            if (result) {
+                for (var i = 0; i < 12; i++) {         //for문 안돌리면 undefined값이 return 됨
+                    if (i % 2 === 0) {
+                        toluene_Data.push(result.data[i]);
+                    }
+                    else{
+                        toluene_Label.push(result.data[i].substr(11,8));
+                    }
+                }
+            }
+        });
+        toluene_Data=toluene_Data.reverse();
+        toluene_Label=toluene_Label.reverse();
+
+        console.log("toluene_Data",toluene_Data);
+
+    }
+
+    async function getO2CallBack() {
+        o2_Data = [];
+        o2_Label = [];
+
+        var db = require('../backend/db_select');
+        await db.getO2Live().then((result) => {
+            if (result) {
+                for (var i = 0; i < 12; i++) {         //for문 안돌리면 undefined값이 return 됨
+                    if (i % 2 === 0) {
+                        o2_Data.push(result.data[i]);
+                    }
+                    else{
+                        o2_Label.push(result.data[i].substr(11,8));
+                    }
+                }
+            }
+        });
+        o2_Data=o2_Data.reverse();
+        o2_Label=o2_Label.reverse();
+
+        console.log("o2_Data",o2_Data);
+
+    }
+
+    async function getVocCallBack() {
+        voc_Data = [];
+        voc_Label = [];
+        var db = require('../backend/db_select');
+        await db.getVocLive().then((result) => {
+            if (result) {
+                for (var i = 0; i < 12; i++) {         //for문 안돌리면 undefined값이 return 됨
+                    if (i % 2 === 0) {
+                        voc_Data.push(result.data[i]);
+                    }
+                    else{
+                        voc_Label.push(result.data[i].substr(11,8));
+                    }
+
+                }
+            }
+        });
+        voc_Data=voc_Data.reverse();
+        voc_Label=voc_Label.reverse();
+
+        console.log("voc_Data",voc_Data);
+
+
     }
 
     async function getDataCallback() {                                   //모든 데이터를 불러오는 콜백 함수
@@ -216,6 +373,10 @@
         await get_dust10();
         await get_dust25();
         await getCo2CallBack();
+        await getTolueneCallBack();
+        await getO2CallBack();
+        await getVocCallBack();
+
     }
 
     function sendAlarm() {
@@ -246,6 +407,11 @@
                     console.log("refresh timer " + this.refresh_remain);
                     this.bigLineChart.refresh_remain = this.refresh_remain;
 
+                    this.vocValue=voc_Data[5];
+                    this.co2Value=co2_Data[5];
+                    this.o2Value=o2_Data[5];
+                    this.tolueneValue=toluene_Data[5];
+
                 } else {                                          //refresh_remain이 0이 되었을때, 차트를 새로고침
 
 
@@ -273,14 +439,21 @@
                     //get data 콜백
                     await that.initBigChart(indexValue);          //this대신 that으로 사용
                     await that.initCo2Chart();
+                    await that.initTolueneChart();
+                    await that.initO2Chart();
+                    await that.initVocChart();
                     console.log("callback 지옥 끝");
-
 
                     this.bigLineChart.allData = [
                         dust_1_Data,
                         dust_25_Data,
                         dust_10_Data
                     ];
+
+                    this.vocValue=voc_Data[5];
+                    this.co2Value=co2_Data[5];
+                    this.o2Value=o2_Data[5];
+                    this.tolueneValue=toluene_Data[5];
 
                     //this.co2LineChart.data = co2_Data;
 
@@ -298,6 +471,10 @@
 
             return {
                 refresh_remain: refresh_remain,      //refresh까지 남은 시간 data
+                vocValue: voc_Data[0],
+                o2Value: o2_Data[0],
+                tolueneValue: toluene_Data[0],
+                co2Value: co2_Data[0],
                 type: ["", "info", "success", "warning", "danger"],     //noti용 type
                 bigLineChart: {
                     allData: [
@@ -313,12 +490,11 @@
                     categories: []
                 },
                 vocLineChart: {
-
                     extraOptions: chartConfigs.purpleChartOptions,
                     chartData: {
-                        labels: chartLabel.labelRecent(6),
+                        labels: voc_Label,
                         datasets: [{
-                            label: "Data",
+                            label: "ppb",
                             fill: true,
                             borderColor: config.colors.primary,
                             borderWidth: 2,
@@ -331,7 +507,7 @@
                             pointHoverRadius: 4,
                             pointHoverBorderWidth: 15,
                             pointRadius: 4,
-                            data: [80, 100, 70, 80, 120, 32.22],
+                            data: voc_Data,
                         }]
                     },
                     gradientColors: config.colors.primaryGradient,
@@ -340,9 +516,9 @@
                 o2LineChart: {
                     extraOptions: chartConfigs.purpleChartOptions,
                     chartData: {
-                        labels: chartLabel.labelRecent(6),
+                        labels: o2_Label,
                         datasets: [{
-                            label: "Data",
+                            label: "ppm",
                             fill: true,
                             borderColor: config.colors.primary,
                             borderWidth: 2,
@@ -355,7 +531,7 @@
                             pointHoverRadius: 4,
                             pointHoverBorderWidth: 15,
                             pointRadius: 4,
-                            data: [100, 20, 40, 50, 20, 21.8],
+                            data: o2_Data,
                         }]
                     },
                     gradientColors: config.colors.primaryGradient,
@@ -364,9 +540,9 @@
                 co2LineChart: {
                     extraOptions: chartConfigs.purpleChartOptions,
                     chartData: {
-                        labels: chartLabel.labelRecent(6),
+                        labels: co2_Label,
                         datasets: [{
-                            label: "PPM",
+                            label: "ppm",
                             fill: true,
                             borderColor: config.colors.primary,
                             borderWidth: 2,
@@ -380,6 +556,30 @@
                             pointHoverBorderWidth: 15,
                             pointRadius: 4,
                             data: co2_Data,
+                        }]
+                    },
+                    gradientColors: config.colors.primaryGradient,
+                    gradientStops: [1, 0.2, 0],
+                },
+                tolueneLineChart: {
+                    extraOptions: chartConfigs.purpleChartOptions,
+                    chartData: {
+                        labels: toluene_Label,
+                        datasets: [{
+                            label: "ppm",
+                            fill: true,
+                            borderColor: config.colors.primary,
+                            borderWidth: 2,
+                            borderDash: [],
+                            borderDashOffset: 0.0,
+                            pointBackgroundColor: config.colors.primary,
+                            pointBorderColor: 'rgba(255,255,255,0)',
+                            pointHoverBackgroundColor: config.colors.primary,
+                            pointBorderWidth: 20,
+                            pointHoverRadius: 4,
+                            pointHoverBorderWidth: 15,
+                            pointRadius: 4,
+                            data: toluene_Data,
                         }]
                     },
                     gradientColors: config.colors.primaryGradient,
@@ -482,12 +682,11 @@
                         pointRadius: 4,
                         data: this.bigLineChart.allData[index]
                     }],
-                    labels: chartLabel.labelRecent(12),
+                    labels: dust_Label[index],
                 }
                 this.$refs.bigChart.updateGradients(chartData);
                 this.bigLineChart.chartData = chartData;
                 this.bigLineChart.activeIndex = index;
-                console.log(this.bigLineChart.allData[index])
 
                 indexValue = index;                                     //현재 누른 index 값을 전역 변수에 저장
                 this.refresh_remain = init_refresh_time;                //refresh_remain에 초기값 init_refresh_time 저장
@@ -496,9 +695,9 @@
             },
             initCo2Chart() {
                 let chartData = {
-                    labels: chartLabel.labelRecent(6),
+                    labels: co2_Label,
                     datasets: [{
-                        label: "PPM",
+                        label: "ppm",
                         fill: true,
                         borderColor: config.colors.primary,
                         borderWidth: 2,
@@ -517,15 +716,88 @@
                 this.$refs.co2LineChart.updateGradients(chartData);
                 this.co2LineChart.chartData = chartData;
 
-                //this.refreshChart(0);
-                console.log("initco2chart=" + co2_Data);
             },
+            initTolueneChart() {
+                let chartData = {
+                    labels: toluene_Label,
+                    datasets: [{
+                        label: "ppm",
+                        fill: true,
+                        borderColor: config.colors.primary,
+                        borderWidth: 2,
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        pointBackgroundColor: config.colors.primary,
+                        pointBorderColor: 'rgba(255,255,255,0)',
+                        pointHoverBackgroundColor: config.colors.primary,
+                        pointBorderWidth: 20,
+                        pointHoverRadius: 4,
+                        pointHoverBorderWidth: 15,
+                        pointRadius: 4,
+                        data: toluene_Data
+                    }]
+                }
+                this.$refs.tolueneLineChart.updateGradients(chartData);
+                this.tolueneLineChart.chartData = chartData;
+            },
+
+            initO2Chart() {
+                let chartData = {
+                    labels: o2_Label,
+                    datasets: [{
+                        label: "ppm",
+                        fill: true,
+                        borderColor: config.colors.primary,
+                        borderWidth: 2,
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        pointBackgroundColor: config.colors.primary,
+                        pointBorderColor: 'rgba(255,255,255,0)',
+                        pointHoverBackgroundColor: config.colors.primary,
+                        pointBorderWidth: 20,
+                        pointHoverRadius: 4,
+                        pointHoverBorderWidth: 15,
+                        pointRadius: 4,
+                        data: o2_Data
+                    }]
+                }
+                this.$refs.o2LineChart.updateGradients(chartData);
+                this.o2LineChart.chartData = chartData;
+            },
+
+            initVocChart() {
+                let chartData = {
+                    labels: voc_Label,
+                    datasets: [{
+                        label: "ppb",
+                        fill: true,
+                        borderColor: config.colors.primary,
+                        borderWidth: 2,
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        pointBackgroundColor: config.colors.primary,
+                        pointBorderColor: 'rgba(255,255,255,0)',
+                        pointHoverBackgroundColor: config.colors.primary,
+                        pointBorderWidth: 20,
+                        pointHoverRadius: 4,
+                        pointHoverBorderWidth: 15,
+                        pointRadius: 4,
+                        data: voc_Data
+                    }]
+                }
+                this.$refs.vocLineChart.updateGradients(chartData);
+                this.vocLineChart.chartData = chartData;
+            },
+
             refreshChart(index) {
                 setTimeout(() => {
                     console.log("refresh chart");
                     this.initBigChart(index);
                     this.initCo2Chart();
-                }, 500);                                                //400밀리초 뒤에 chart refresh
+                    this.initTolueneChart();
+                    this.initO2Chart();
+                    this.initVocChart();
+                }, 1000);                                                //400밀리초 뒤에 chart refresh
             },
             notifyVue(verticalAlign, horizontalAlign) {
                 const color = Math.floor(Math.random() * 4 + 1);
