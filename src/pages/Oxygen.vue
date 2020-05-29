@@ -14,7 +14,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <span id="timer"
-                                      style="float:right; margin-right:5px">{{ refresh_remain }} 초 후 새로고침</span><br/>
+                                      style="float:right; margin-right:5px">{{ refresh_remain }} 초 후 새로고침 123</span><br/>
                                 <div class="btn-group btn-group-toggle"
                                      :class="isRTL ? 'float-left' : 'float-right'"
                                      data-toggle="buttons">
