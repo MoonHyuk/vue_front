@@ -1,75 +1,10 @@
 <template>
     <div>
-
         <div class="row">
-            <div class="col-12">
+            <div class="col-lg-4" :class="{'text-right': isRTL}">
                 <card type="chart">
                     <template slot="header">
-                        <div class="row">
-
-                            <div class="col-sm-6" :class="isRTL ? 'text-right' : 'text-left'">
-                                <h5 class="card-category">{{$t('dashboard.totalShipments')}} </h5>
-                                <h2 class="card-title">{{$t('dashboard.FineDust')}}</h2>
-
-                            </div>
-                            <div class="col-sm-6">
-                                <span id="timer"
-                                      style="float:right; margin-right:5px">{{ refresh_remain }} 초 후 새로고침 123</span><br/>
-                                <div class="btn-group btn-group-toggle"
-                                     :class="isRTL ? 'float-left' : 'float-right'"
-                                     data-toggle="buttons">
-                                    <label v-for="(option, index) in bigLineChartCategories"
-                                           :key="option"
-                                           class="btn btn-sm btn-primary btn-simple"
-                                           :class="{active: bigLineChart.activeIndex === index}"
-                                           :id="index">
-                                        <input type="radio"
-                                               @click="initBigChart(index)"
-                                               name="options" autocomplete="off"
-                                               :checked="bigLineChart.activeIndex === index">
-                                        {{option}}
-                                    </label>
-
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                    <div class="chart-area">
-                        <line-chart style="height: 100%"
-                                    ref="bigChart"
-                                    chart-id="big-line-chart"
-                                    :chart-data="bigLineChart.chartData"
-                                    :gradient-colors="bigLineChart.gradientColors"
-                                    :gradient-stops="bigLineChart.gradientStops"
-                                    :extra-options="bigLineChart.extraOptions">
-                        </line-chart>
-                    </div>
-                </card>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-6" :class="{'text-right': isRTL}">
-                <card type="chart">
-                    <template slot="header">
-                        <h5 class="card-category">{{$t('dashboard.totalShipments')}}</h5>
-                        <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>TVOC {{vocValue}} ppb</h3>
-                    </template>
-                    <div class="chart-area">
-                        <line-chart style="height: 100%"
-                                    ref="vocLineChart"
-                                    chart-id="purple-line-chart"
-                                    :chart-data="vocLineChart.chartData"
-                                    :gradient-colors="vocLineChart.gradientColors"
-                                    :gradient-stops="vocLineChart.gradientStops"
-                                    :extra-options="vocLineChart.extraOptions">
-                        </line-chart>
-                    </div>
-                </card>
-            </div>
-            <div class="col-lg-6" :class="{'text-right': isRTL}">
-                <card type="chart">
-                    <template slot="header">
-                        <h5 class="card-category">{{$t('dashboard.totalShipments')}}</h5>
+                        <h5 class="card-category">{{$t('dashboard.totalShipments')}} 1</h5>
                         <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>O2 {{o2Value}} %</h3>
                     </template>
                     <div class="chart-area">
@@ -84,83 +19,102 @@
                     </div>
                 </card>
             </div>
-
-
-        </div>
-
-
-        <div class="row">
-            <div class="col-lg-6" :class="{'text-right': isRTL}">
+            <div class="col-lg-4" :class="{'text-right': isRTL}">
                 <card type="chart">
                     <template slot="header">
-                        <h5 class="card-category">{{$t('dashboard.totalShipments')}}</h5>
-                        <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>CO2 {{co2Value}} ppm</h3>
+                        <h5 class="card-category">{{$t('dashboard.totalShipments')}} 2</h5>
+                        <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>O2 {{o2Value}} %</h3>
                     </template>
                     <div class="chart-area">
                         <line-chart style="height: 100%"
-                                    ref="co2LineChart"
+                                    ref="o2LineChart"
                                     chart-id="purple-line-chart"
-                                    :chart-data="co2LineChart.chartData"
-                                    :gradient-colors="co2LineChart.gradientColors"
-                                    :gradient-stops="co2LineChart.gradientStops"
-                                    :extra-options="co2LineChart.extraOptions">
+                                    :chart-data="o2LineChart.chartData"
+                                    :gradient-colors="o2LineChart.gradientColors"
+                                    :gradient-stops="o2LineChart.gradientStops"
+                                    :extra-options="o2LineChart.extraOptions">
                         </line-chart>
                     </div>
                 </card>
             </div>
-            <div class="col-lg-6" :class="{'text-right': isRTL}">
+            <div class="col-lg-4" :class="{'text-right': isRTL}">
                 <card type="chart">
                     <template slot="header">
-                        <h5 class="card-category">{{$t('dashboard.totalShipments')}}</h5>
-                        <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>TOLUENE {{tolueneValue}} ppm</h3>
+                        <h5 class="card-category">{{$t('dashboard.totalShipments')}} 3</h5>
+                        <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>O2 {{o2Value}} %</h3>
                     </template>
                     <div class="chart-area">
                         <line-chart style="height: 100%"
-                                    ref="tolueneLineChart"
+                                    ref="o2LineChart"
                                     chart-id="purple-line-chart"
-                                    :chart-data="tolueneLineChart.chartData"
-                                    :gradient-colors="tolueneLineChart.gradientColors"
-                                    :gradient-stops="tolueneLineChart.gradientStops"
-                                    :extra-options="tolueneLineChart.extraOptions">
+                                    :chart-data="o2LineChart.chartData"
+                                    :gradient-colors="o2LineChart.gradientColors"
+                                    :gradient-stops="o2LineChart.gradientStops"
+                                    :extra-options="o2LineChart.extraOptions">
                         </line-chart>
                     </div>
                 </card>
             </div>
-
         </div>
 
         <div class="row">
-            <div class="col-lg-6 col-md-12">
-                <card type="tasks" :header-classes="{'text-right': isRTL}">
+            <div class="col-lg-4" :class="{'text-right': isRTL}">
+                <card type="chart">
                     <template slot="header">
-                        <h6 class="title d-inline">{{$t('dashboard.tasks', {count: 5})}}</h6>
-                        <p class="card-category d-inline">{{$t('dashboard.today')}}</p>
-                        <base-dropdown menu-on-right=""
-                                       tag="div"
-                                       title-classes="btn btn-link btn-icon"
-                                       aria-label="Settings menu"
-                                       :class="{'float-left': isRTL}">
-                            <i slot="title" class="tim-icons icon-settings-gear-63"></i>
-                            <a class="dropdown-item" href="#pablo">{{$t('dashboard.dropdown.action')}}</a>
-                            <a class="dropdown-item" href="#pablo">{{$t('dashboard.dropdown.anotherAction')}}</a>
-                            <a class="dropdown-item" href="#pablo">{{$t('dashboard.dropdown.somethingElse')}}</a>
-                        </base-dropdown>
+                        <h5 class="card-category">{{$t('dashboard.totalShipments')}} 4</h5>
+                        <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>O2 {{o2Value}} %</h3>
                     </template>
-                    <div class="table-full-width table-responsive">
-                        <task-list></task-list>
+                    <div class="chart-area">
+                        <line-chart style="height: 100%"
+                                    ref="o2LineChart"
+                                    chart-id="purple-line-chart"
+                                    :chart-data="o2LineChart.chartData"
+                                    :gradient-colors="o2LineChart.gradientColors"
+                                    :gradient-stops="o2LineChart.gradientStops"
+                                    :extra-options="o2LineChart.extraOptions">
+                        </line-chart>
                     </div>
                 </card>
             </div>
-            <div class="col-lg-6 col-md-12">
-                <card class="card" :header-classes="{'text-right': isRTL}">
-                    <h4 slot="header" class="card-title">{{$t('dashboard.simpleTable')}}</h4>
-                    <div class="table-responsive">
-                        <user-table></user-table>
+            <div class="col-lg-4" :class="{'text-right': isRTL}">
+                <card type="chart">
+                    <template slot="header">
+                        <h5 class="card-category">{{$t('dashboard.totalShipments')}} 5</h5>
+                        <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>O2 {{o2Value}} %</h3>
+                    </template>
+                    <div class="chart-area">
+                        <line-chart style="height: 100%"
+                                    ref="o2LineChart"
+                                    chart-id="purple-line-chart"
+                                    :chart-data="o2LineChart.chartData"
+                                    :gradient-colors="o2LineChart.gradientColors"
+                                    :gradient-stops="o2LineChart.gradientStops"
+                                    :extra-options="o2LineChart.extraOptions">
+                        </line-chart>
+                    </div>
+                </card>
+            </div>
+            <div class="col-lg-4" :class="{'text-right': isRTL}">
+                <card type="chart">
+                    <template slot="header">
+                        <h5 class="card-category">{{$t('dashboard.totalShipments')}} 6</h5>
+                        <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>O2 {{o2Value}} %</h3>
+                    </template>
+                    <div class="chart-area">
+                        <line-chart style="height: 100%"
+                                    ref="o2LineChart"
+                                    chart-id="purple-line-chart"
+                                    :chart-data="o2LineChart.chartData"
+                                    :gradient-colors="o2LineChart.gradientColors"
+                                    :gradient-stops="o2LineChart.gradientStops"
+                                    :extra-options="o2LineChart.extraOptions">
+                        </line-chart>
                     </div>
                 </card>
             </div>
         </div>
     </div>
+
 </template>
 <script>
     import LineChart from '@/components/Charts/LineChart';
