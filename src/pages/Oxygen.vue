@@ -4,7 +4,7 @@
             <div class="col-lg-4" :class="{'text-right': isRTL}">
                 <card type="chart">
                     <template slot="header">
-                        <h5 class="card-category">{{$t('dashboard.totalShipments')}} 1</h5>
+                        <h5 class="card-category">{{$t('dashboard.totalShipments')}} : 센서 1</h5>
                         <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>O2 {{o2Value}} %</h3>
                     </template>
                     <div class="chart-area">
@@ -22,7 +22,7 @@
             <div class="col-lg-4" :class="{'text-right': isRTL}">
                 <card type="chart">
                     <template slot="header">
-                        <h5 class="card-category">{{$t('dashboard.totalShipments')}} 2</h5>
+                        <h5 class="card-category">{{$t('dashboard.totalShipments')}} : 센서 2</h5>
                         <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>O2 {{o2Value}} %</h3>
                     </template>
                     <div class="chart-area">
@@ -40,7 +40,7 @@
             <div class="col-lg-4" :class="{'text-right': isRTL}">
                 <card type="chart">
                     <template slot="header">
-                        <h5 class="card-category">{{$t('dashboard.totalShipments')}} 3</h5>
+                        <h5 class="card-category">{{$t('dashboard.totalShipments')}} : 센서 3</h5>
                         <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>O2 {{o2Value}} %</h3>
                     </template>
                     <div class="chart-area">
@@ -61,7 +61,7 @@
             <div class="col-lg-4" :class="{'text-right': isRTL}">
                 <card type="chart">
                     <template slot="header">
-                        <h5 class="card-category">{{$t('dashboard.totalShipments')}} 4</h5>
+                        <h5 class="card-category">{{$t('dashboard.totalShipments')}} : 센서 4</h5>
                         <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>O2 {{o2Value}} %</h3>
                     </template>
                     <div class="chart-area">
@@ -79,7 +79,7 @@
             <div class="col-lg-4" :class="{'text-right': isRTL}">
                 <card type="chart">
                     <template slot="header">
-                        <h5 class="card-category">{{$t('dashboard.totalShipments')}} 5</h5>
+                        <h5 class="card-category">{{$t('dashboard.totalShipments')}} : 센서 5</h5>
                         <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>O2 {{o2Value}} %</h3>
                     </template>
                     <div class="chart-area">
@@ -97,7 +97,7 @@
             <div class="col-lg-4" :class="{'text-right': isRTL}">
                 <card type="chart">
                     <template slot="header">
-                        <h5 class="card-category">{{$t('dashboard.totalShipments')}} 6</h5>
+                        <h5 class="card-category">{{$t('dashboard.totalShipments')}} : 센서 6</h5>
                         <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>O2 {{o2Value}} %</h3>
                     </template>
                     <div class="chart-area">
@@ -155,6 +155,7 @@
                 }
             }
         });
+
         o2_Data=o2_Data.reverse();
         o2_Label=o2_Label.reverse();
 
