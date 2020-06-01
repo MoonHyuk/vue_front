@@ -4,6 +4,8 @@ import NotFound from "@/pages/NotFoundPage.vue";
 
 // Admin pages
 const Dashboard = () => import(/* webpackChunkName: "dashboard" */"@/pages/Dashboard.vue");
+const Oxygen = () => import(/* webpackChunkName: "dashboard" */"@/pages/Oxygen.vue");
+const Co2 = () => import(/* webpackChunkName: "dashboard" */"@/pages/Co2.vue");
 const Profile = () => import(/* webpackChunkName: "common" */ "@/pages/Profile.vue");
 const Notifications = () => import(/* webpackChunkName: "common" */"@/pages/Notifications.vue");
 const Icons = () => import(/* webpackChunkName: "common" */ "@/pages/Icons.vue");
@@ -21,6 +23,16 @@ const routes = [
         path: "dashboard",
         name: "dashboard",
         component: Dashboard
+      },
+      {
+        path: "oxygen",
+        name: "oxygen",
+        component: Oxygen
+      },
+      {
+        path: "co2",
+        name: "co2",
+        component: Co2
       },
       {
         path: "profile",
