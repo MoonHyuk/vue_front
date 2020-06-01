@@ -155,7 +155,7 @@
                 <card class="card" :header-classes="{'text-right': isRTL}">
                     <h4 slot="header" class="card-title">공기질 기준 등급</h4>
                     <div class="table-responsive">
-                        <user-table></user-table>
+                        <user-table ></user-table>
                     </div>
                 </card>
             </div>
@@ -464,7 +464,7 @@
                     }
 
                     if(o2_Data[5] > 23.5){
-                        this.notifyO2('top','center');
+                        //this.notifyO2('top','center');
                     }
 
                     if(o2_Data[5] < 18){
