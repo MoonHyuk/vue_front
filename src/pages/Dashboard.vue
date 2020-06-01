@@ -169,7 +169,14 @@
     import TaskList from './Dashboard/TaskList';
     import UserTable from './Dashboard/UserTable';
     import config from '@/config';
-    import NotificationTemplate from './Notifications/NotificationTemplate';        //notification 내용 teㄴmplate
+    import NotificationTemplate from './Notifications/NotificationTemplate';        //notification 내용 template
+    import notiToluene from "./Notifications/notiToluene";
+    import notiVoc from "./Notifications/notiVoc";
+    import notiCo2 from "./Notifications/notiCo2";
+    import notiPm25 from "./Notifications/notiPm25";
+    import notiPm10 from "./Notifications/notiPm10";
+    import notiOxygen from "./Notifications/notiOxygen";
+    import notiOxygenLow from "./Notifications/notiOxygenLow";
 
     let init_refresh_time = 0;                //자동 새로고침 시간 초기값 지정
 
@@ -417,13 +424,13 @@
                 } else {                                          //refresh_remain이 0이 되었을때, 차트를 새로고침
 
 
-                    /* 위험농도 넘을 시 notification, 배열 값 비교는 getData() 전에 해야 함 */
+                    /* 위험농도 넘을 시 notification, 배열 값 비교는 getData() 전에 해야 함
                     if (dust_1_Data[11] > 500) {                    //dust_1_Data의 최근 데이터가 기준값을 넘는지 확인
                         this.notifyVue('top', 'center');        //위험 농도값을 넘어갔을 경우 noti 띄움
                         this.initBigChart(0);                   //해당 차트를 표시
                         sendAlarm();
                     }
-                    /*
+
                     if(dust_10_Data[11] > 50){                  //dust_10_Data의 최근 데이터가 기준값을 넘는지 확인
                         this.notifyVue('top', 'center');        //위험 농도값을 넘어갔을 경우 noti 띄움
                         this.initBigChart(1);                   //해당 차트를 표시
@@ -433,6 +440,37 @@
                         this.initBigChart(2);                   //해당 차트를 표시
                     }
                     */
+
+                    if(toluene_Data[5] > 150){
+                        this.notifyToluene('top','center');
+                    }
+
+                    if(voc_Data[5]> 1000){
+                        this.notifyVoc('top','center');
+                    }
+
+                    if(co2_Data[5] > 5000){
+                        this.notifyCo2('top','center');
+                    }
+
+                    if(dust_25_Data[11] > 50){
+                        this.notifyPm25('top','center');
+                        this.initBigChart(1);                   //해당 차트를 표시
+                    }
+
+                    if(dust_10_Data[11] > 100){
+                        this.notifyPm10('top','center');
+                        this.initBigChart(2);                   //해당 차트를 표시
+                    }
+
+                    if(o2_Data[5] > 23.5){
+                        this.notifyO2('top','center');
+                    }
+
+                    if(o2_Data[5] < 18){
+                        this.notifyO2Low('top','center');
+                    }
+
 
 
                     /* 데이터 초기화 */
@@ -814,7 +852,94 @@
                     type: this.type[color],                          //팝업창 색깔, info=blue, success=green ,warning=orange, danger=pink,
                     timeout: 0                                       //팝업 떠 있는 시간(ms), 0초 = 무한
                 });
-            }
+            },
+
+            notifyToluene(verticalAlign, horizontalAlign) {
+                const color = Math.floor(Math.random() * 4 + 1);
+                this.$notify({
+                    component: notiToluene,   //템플릿 내용 변경 가능 부분, ./Notifications/NotificationTemplate
+                    icon: "tim-icons icon-bell-55",                  //아이콘 모양
+                    horizontalAlign: horizontalAlign,
+                    verticalAlign: verticalAlign,
+                    type: this.type[color],                          //팝업창 색깔, info=blue, success=green ,warning=orange, danger=pink,
+                    timeout: 0,                                       //팝업 떠 있는 시간(ms), 0초 = 무한
+                    color: 123412
+                });
+            },
+
+            notifyVoc(verticalAlign, horizontalAlign) {
+                const color = Math.floor(Math.random() * 4 + 1);
+                this.$notify({
+                    component: notiVoc,   //템플릿 내용 변경 가능 부분, ./Notifications/NotificationTemplate
+                    icon: "tim-icons icon-bell-55",                  //아이콘 모양
+                    horizontalAlign: horizontalAlign,
+                    verticalAlign: verticalAlign,
+                    type: this.type[color],                          //팝업창 색깔, info=blue, success=green ,warning=orange, danger=pink,
+                    timeout: 0                                       //팝업 떠 있는 시간(ms), 0초 = 무한
+                });
+            },
+
+            notifyCo2(verticalAlign, horizontalAlign) {
+                const color = Math.floor(Math.random() * 4 + 1);
+                this.$notify({
+                    component: notiCo2,   //템플릿 내용 변경 가능 부분, ./Notifications/NotificationTemplate
+                    icon: "tim-icons icon-bell-55",                  //아이콘 모양
+                    horizontalAlign: horizontalAlign,
+                    verticalAlign: verticalAlign,
+                    type: this.type[color],                          //팝업창 색깔, info=blue, success=green ,warning=orange, danger=pink,
+                    timeout: 0                                       //팝업 떠 있는 시간(ms), 0초 = 무한
+                });
+            },
+
+            notifyPm25(verticalAlign, horizontalAlign) {
+                const color = Math.floor(Math.random() * 4 + 1);
+                this.$notify({
+                    component: notiPm25,   //템플릿 내용 변경 가능 부분, ./Notifications/NotificationTemplate
+                    icon: "tim-icons icon-bell-55",                  //아이콘 모양
+                    horizontalAlign: horizontalAlign,
+                    verticalAlign: verticalAlign,
+                    type: this.type[color],                          //팝업창 색깔, info=blue, success=green ,warning=orange, danger=pink,
+                    timeout: 0                                       //팝업 떠 있는 시간(ms), 0초 = 무한
+                });
+            },
+
+            notifyPm10(verticalAlign, horizontalAlign) {
+                const color = Math.floor(Math.random() * 4 + 1);
+                this.$notify({
+                    component: notiPm10,   //템플릿 내용 변경 가능 부분, ./Notifications/NotificationTemplate
+                    icon: "tim-icons icon-bell-55",                  //아이콘 모양
+                    horizontalAlign: horizontalAlign,
+                    verticalAlign: verticalAlign,
+                    type: this.type[color],                          //팝업창 색깔, info=blue, success=green ,warning=orange, danger=pink,
+                    timeout: 0                                       //팝업 떠 있는 시간(ms), 0초 = 무한
+                });
+            },
+
+            notifyO2(verticalAlign, horizontalAlign) {
+                const color = Math.floor(Math.random() * 4 + 1);
+                this.$notify({
+                    component: notiOxygen,   //템플릿 내용 변경 가능 부분, ./Notifications/NotificationTemplate
+                    icon: "tim-icons icon-bell-55",                  //아이콘 모양
+                    horizontalAlign: horizontalAlign,
+                    verticalAlign: verticalAlign,
+                    type: this.type[color],                          //팝업창 색깔, info=blue, success=green ,warning=orange, danger=pink,
+                    timeout: 0                                       //팝업 떠 있는 시간(ms), 0초 = 무한
+                });
+            },
+
+            notifyO2Low(verticalAlign, horizontalAlign) {
+                const color = Math.floor(Math.random() * 4 + 1);
+                this.$notify({
+                    component: notiOxygenLow,   //템플릿 내용 변경 가능 부분, ./Notifications/NotificationTemplate
+                    icon: "tim-icons icon-bell-55",                  //아이콘 모양
+                    horizontalAlign: horizontalAlign,
+                    verticalAlign: verticalAlign,
+                    type: this.type[color],                          //팝업창 색깔, info=blue, success=green ,warning=orange, danger=pink,
+                    timeout: 0                                       //팝업 떠 있는 시간(ms), 0초 = 무한
+                });
+            },
+
+
 
         },
         mounted() {
