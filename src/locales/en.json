@@ -19,63 +19,54 @@
       "somethingElse": "Something else"
     },
     "usersTable": {
-      "title": "Simple Table",
+      "title": "공기질 기준 등급",
       "columns": [
-        "Name",
-        "Country",
-        "City",
-        "Salary"
+        "구분",
+        "1단계",
+        "2단계",
+        "3단계",
+        "4단계",
+        "5단계"
       ],
       "data": [
         {
           "id": 1,
-          "name": "Dakota Rice",
-          "salary": "$36.738",
-          "country": "Niger",
-          "city": "Oud-Turnhout"
+          "구분": "o2",
+          "1단계": "18% 매우답답",
+          "2단계": "19.4% 답답",
+          "3단계": "20.5% 보통",
+          "4단계": "21.2% 쾌적",
+          "5단계": "21.6% 매우 쾌적"
         },
         {
           "id": 2,
-          "name": "Minerva Hooper",
-          "salary": "$23,789",
-          "country": "Curaçao",
-          "city": "Sinaai-Waas"
+          "구분": "pm 10",
+          "1단계": "0~30 좋음",
+          "2단계": "31-80 보통",
+          "3단계": "81-150 나쁨",
+          "4단계": "150 초과 매우나쁨"
         },
         {
           "id": 3,
-          "name": "Sage Rodriguez",
-          "salary": "$56,142",
-          "country": "Netherlands",
-          "city": "Baileux"
+          "구분": "VOC",
+          "1단계": "1000 ug/m3 이하"
         },
         {
           "id": 4,
-          "name": "Philip Chaney",
-          "salary": "$38,735",
-          "country": "Korea, South",
-          "city": "Overland Park"
+          "구분": "Co2",
+          "1단계": "350-450 쾌적",
+          "2단계": "450-1000 일반",
+          "3단계": "1000-2000 답답",
+          "4단계": "2000-5000 매우답답",
+          "5단계": "5000 초과 위험"
         },
         {
           "id": 5,
-          "name": "Doris Greene",
-          "salary": "$63,542",
-          "country": "Malawi",
-          "city": "Feldkirchen in Kärnten"
-        },
-        {
-          "id": 6,
-          "name": "Mason Porter",
-          "salary": "$98,615",
-          "country": "Chile",
-          "city": "Gloucester"
-        },
-        {
-          "id": 7,
-          "name": "Jon Porter",
-          "salary": "$78,615",
-          "country": "Portugal",
-          "city": "Gloucester"
+          "구분": "Toluene",
+          "1단계": "TWA 50 ppm",
+          "2단계": "STEL 150 ppm"
         }
+
       ]
     },
     "taskList": [

@@ -130,7 +130,7 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-6 col-md-12">
+            <!--div class="col-lg-6 col-md-12">
                 <card type="tasks" :header-classes="{'text-right': isRTL}">
                     <template slot="header">
                         <h6 class="title d-inline">{{$t('dashboard.tasks', {count: 5})}}</h6>
@@ -150,10 +150,10 @@
                         <task-list></task-list>
                     </div>
                 </card>
-            </div>
-            <div class="col-lg-6 col-md-12">
+            </div-->
+            <div class="col-lg-12 col-md-12">
                 <card class="card" :header-classes="{'text-right': isRTL}">
-                    <h4 slot="header" class="card-title">{{$t('dashboard.simpleTable')}}</h4>
+                    <h4 slot="header" class="card-title">공기질 기준 등급</h4>
                     <div class="table-responsive">
                         <user-table></user-table>
                     </div>
