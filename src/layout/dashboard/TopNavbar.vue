@@ -32,12 +32,12 @@
             <div class="search-bar input-group" @click="searchModalVisible = true">
               <!-- <input type="text" class="form-control" placeholder="Search...">
               <div class="input-group-addon"><i class="tim-icons icon-zoom-split"></i></div> -->
-              <button class="btn btn-link" id="search-button" data-toggle="modal" data-target="#searchModal">
+              <!--button class="btn btn-link" id="search-button" data-toggle="modal" data-target="#searchModal">
                 <i class="tim-icons icon-zoom-split"></i>
-              </button>
+              </button-->
               <!-- You can choose types of search input -->
             </div>
-            <modal :show.sync="searchModalVisible"
+            <!--modal :show.sync="searchModalVisible"
                    class="modal-search"
                    id="searchModal"
                    :centered="false"
@@ -94,7 +94,7 @@
               <li class="nav-link">
                 <a href="#" class="nav-item dropdown-item">Log out</a>
               </li>
-            </base-dropdown>
+            </base-dropdown-->
           </ul>
         </div>
       </collapse-transition>
