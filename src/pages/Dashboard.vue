@@ -403,6 +403,8 @@
         },
 
         beforeCreate() {                                         //beforeCreate시에는 this 사용할 수 없음
+            var now = new Date();
+            console.time('response in');
             //create 전에 axios 데이터 호출
             getDataCallback();
         },
@@ -951,6 +953,7 @@
             //this.initBigChart(0);
             this.refreshChart(0);
 
+            console.timeEnd('response in');
         },
         beforeDestroy() {
             //console.log("timer멈춤");
