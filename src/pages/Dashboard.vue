@@ -13,8 +13,6 @@
 
                             </div>
                             <div class="col-sm-6">
-                                <span id="timer"
-                                      style="float:right; margin-right:5px">{{ refresh_remain }} 초 후 새로고침</span><br/>
                                 <div class="btn-group btn-group-toggle"
                                      :class="isRTL ? 'float-left' : 'float-right'"
                                      data-toggle="buttons">
@@ -426,7 +424,7 @@
                 } else {                                          //refresh_remain이 0이 되었을때, 차트를 새로고침
 
 
-                    /* 위험농도 넘을 시 notification, 배열 값 비교는 getData() 전에 해야 함
+                    /* 위험농도 넘을 시 notification, 배열 값 비교는 getData() 전에 해야 함 */
                     if (dust_1_Data[11] > 500) {                    //dust_1_Data의 최근 데이터가 기준값을 넘는지 확인
                         this.notifyVue('top', 'center');        //위험 농도값을 넘어갔을 경우 noti 띄움
                         this.initBigChart(0);                   //해당 차트를 표시
@@ -436,33 +434,39 @@
                     if(dust_10_Data[11] > 50){                  //dust_10_Data의 최근 데이터가 기준값을 넘는지 확인
                         this.notifyVue('top', 'center');        //위험 농도값을 넘어갔을 경우 noti 띄움
                         this.initBigChart(1);                   //해당 차트를 표시
+                        sendAlarm();
                     }
                     if(dust_25_Data[11] > 50){                  //dust_25_Data의 최근 데이터가 기준값을 넘는지 확인
                         this.notifyVue('top', 'center');        //위험 농도값을 넘어갔을 경우 noti 띄움
                         this.initBigChart(2);                   //해당 차트를 표시
+                        sendAlarm();
                     }
-                    */
-
+    
                     if(toluene_Data[5] > 150){
                         this.notifyToluene('top','center');
+                        sendAlarm();
                     }
 
                     if(voc_Data[5]> 1000){
                         this.notifyVoc('top','center');
+                        sendAlarm();
                     }
 
                     if(co2_Data[5] > 5000){
                         this.notifyCo2('top','center');
+                        sendAlarm();
                     }
 
                     if(dust_25_Data[11] > 50){
                         this.notifyPm25('top','center');
                         this.initBigChart(1);                   //해당 차트를 표시
+                        sendAlarm();
                     }
 
                     if(dust_10_Data[11] > 100){
                         this.notifyPm10('top','center');
                         this.initBigChart(2);                   //해당 차트를 표시
+                        sendAlarm();
                     }
 
                     if(o2_Data[5] > 23.5){
@@ -471,6 +475,8 @@
 
                     if(o2_Data[5] < 18){
                         this.notifyO2Low('top','center');
+                        sendAlarm();
+                        
                     }
 
 
