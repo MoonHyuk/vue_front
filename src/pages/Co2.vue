@@ -219,11 +219,12 @@
                         this.notifyVue('top', 'center');        //위험 농도값을 넘어갔을 경우 noti 띄움
                         this.initBigChart(2);                   //해당 차트를 표시
                     }
-                    */
+
 
                     if(co2_Data[5] > 5000){
                         this.notifyCo2('top','center');
                     }
+                    */
 
 
                     /* 데이터 초기화 */

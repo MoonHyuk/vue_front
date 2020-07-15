@@ -56,7 +56,30 @@ const getVocLive = async () => {
   }
 };
 
+const getH2hoLive = async () => {
+  try {
+    return await axios.get('/api/h2hoLive');
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getRadonLive = async () => {
+  try {
+    return await axios.get('/api/radonLive');
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getCoLive = async () => {
+  try {
+    return await axios.get('/api/coLive');
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 module.exports = {
-  getCo2Live, getTolueneLive, getPm1Live, getPm25Live, getPm10Live, getO2Live, getVocLive
+  getCo2Live, getTolueneLive, getPm1Live, getPm25Live, getPm10Live, getO2Live, getVocLive, getH2hoLive, getRadonLive, getCoLive
 }

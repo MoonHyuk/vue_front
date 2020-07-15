@@ -124,6 +124,68 @@
                     </div>
                 </card>
             </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6" :class="{'text-right': isRTL}">
+                <card type="chart">
+                    <template slot="header">
+                        <h5 class="card-category">{{$t('dashboard.totalShipments')}}</h5>
+                        <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>H2HO {{h2hoValue}} ppm</h3>
+                    </template>
+                    <div class="chart-area">
+                        <line-chart style="height: 100%"
+                                    ref="h2hoLineChart"
+                                    chart-id="purple-line-chart"
+                                    :chart-data="h2hoLineChart.chartData"
+                                    :gradient-colors="h2hoLineChart.gradientColors"
+                                    :gradient-stops="h2hoLineChart.gradientStops"
+                                    :extra-options="h2hoLineChart.extraOptions">
+                        </line-chart>
+                    </div>
+                </card>
+            </div>
+
+            <div class="col-lg-6" :class="{'text-right': isRTL}">
+                <card type="chart">
+                    <template slot="header">
+                        <h5 class="card-category">{{$t('dashboard.totalShipments')}}</h5>
+                        <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>RADON {{radonValue}} μsv/h</h3>
+                    </template>
+                    <div class="chart-area">
+                        <line-chart style="height: 100%"
+                                    ref="radonLineChart"
+                                    chart-id="purple-line-chart"
+                                    :chart-data="radonLineChart.chartData"
+                                    :gradient-colors="radonLineChart.gradientColors"
+                                    :gradient-stops="radonLineChart.gradientStops"
+                                    :extra-options="radonLineChart.extraOptions">
+                        </line-chart>
+                    </div>
+                </card>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6" :class="{'text-right': isRTL}">
+                <card type="chart">
+                    <template slot="header">
+                        <h5 class="card-category">{{$t('dashboard.totalShipments')}}</h5>
+                        <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>CO {{coValue}} ppm</h3>
+                    </template>
+                    <div class="chart-area">
+                        <line-chart style="height: 100%"
+                                    ref="coLineChart"
+                                    chart-id="purple-line-chart"
+                                    :chart-data="coLineChart.chartData"
+                                    :gradient-colors="coLineChart.gradientColors"
+                                    :gradient-stops="coLineChart.gradientStops"
+                                    :extra-options="coLineChart.extraOptions">
+                        </line-chart>
+                    </div>
+                </card>
+            </div>
 
         </div>
 
@@ -191,6 +253,9 @@
     let o2_Data = [];                          // o2 data 저장용 배열
     let toluene_Data = [];                          // toluene data 저장용 배열
     let voc_Data = [];                          // voc data 저장용 배열
+    let h2ho_Data = [];
+    let radon_Data  = [];
+    let co_Data = [];
 
     let dust_Label=[[],[],[]];
     let dust_1_Label = [];                       // dust_1 Label 저장용 배열
@@ -200,6 +265,9 @@
     let o2_Label = [];                          // o2 Label 저장용 배열
     let toluene_Label = [];                          // toluene Label 저장용 배열
     let voc_Label = [];                          // voc Label 저장용 배열
+    let h2ho_Label = [];
+    let radon_Label = [];
+    let co_Label = [];
 
 
 
@@ -371,25 +439,98 @@
         voc_Label=voc_Label.reverse();
 
         console.log("voc_Data",voc_Data);
+    }
 
+    async function getH2hoCallBack() {
+        h2ho_Data = [];
+        h2ho_Label = [];
+
+        var db = require('../backend/db_select');
+        await db.getH2hoLive().then((result) => {
+            if (result) {
+                for (var i = 0; i < 12; i++) {         //for문 안돌리면 undefined값이 return 됨
+                    if (i % 2 === 0) {
+                        h2ho_Data.push(result.data[i]);
+                    }
+                    else{
+                        h2ho_Label.push(result.data[i].substr(11,8));
+                    }
+                }
+            }
+        });
+        h2ho_Data=h2ho_Data.reverse();
+        h2ho_Label=h2ho_Label.reverse();
+
+        console.log("h2ho_Data",h2ho_Data);
 
     }
 
+    async function getRadonCallBack() {
+        radon_Data = [];
+        radon_Label = [];
+
+        var db = require('../backend/db_select');
+        await db.getRadonLive().then((result) => {
+            if (result) {
+                for (var i = 0; i < 12; i++) {         //for문 안돌리면 undefined값이 return 됨
+                    if (i % 2 === 0) {
+                        radon_Data.push(result.data[i]);
+                    }
+                    else{
+                        radon_Label.push(result.data[i].substr(11,8));
+                    }
+                }
+            }
+        });
+        radon_Data=radon_Data.reverse();
+        radon_Label=radon_Label.reverse();
+
+        console.log("radon_Data",radon_Data);
+
+    }
+
+    async function getCoCallBack() {
+        co_Data = [];
+        co_Label = [];
+
+        var db = require('../backend/db_select');
+        await db.getCoLive().then((result) => {
+            if (result) {
+                for (var i = 0; i < 12; i++) {         //for문 안돌리면 undefined값이 return 됨
+                    if (i % 2 === 0) {
+                        co_Data.push(result.data[i]);
+                    }
+                    else{
+                        co_Label.push(result.data[i].substr(11,8));
+                    }
+                }
+            }
+        });
+        co_Data=co_Data.reverse();
+        co_Label=co_Label.reverse();
+
+        console.log("co_Data",co_Data);
+
+    }
+
+
     async function getDataCallback() {                                   //모든 데이터를 불러오는 콜백 함수
-        await get_dust1();
-        await get_dust10();
-        await get_dust25();
+        //await get_dust1();
+        //await get_dust10();
+        //await get_dust25();
         await getCo2CallBack();
         await getTolueneCallBack();
         await getO2CallBack();
         await getVocCallBack();
-
+        await getH2hoCallBack();
+        await getRadonCallBack();
+        await getCoCallBack();
     }
 
-    function sendAlarm() {
+    /*function sendAlarm() {
         var fcm = require('../backend/fcm_sender');
         fcm.fcm_sender();
-    }
+    }*/
 
 
     export default {
@@ -420,53 +561,57 @@
                     this.co2Value=co2_Data[5];
                     this.o2Value=o2_Data[5];
                     this.tolueneValue=toluene_Data[5];
+                    this.h2hoValue=h2ho_Data[5];
+                    this.radonValue=radon_Data[5];
+                    this.coValue = co_Data[5];
 
                 } else {                                          //refresh_remain이 0이 되었을때, 차트를 새로고침
 
+/*
 
-                    /* 위험농도 넘을 시 notification, 배열 값 비교는 getData() 전에 해야 함 */
+                    /!* 위험농도 넘을 시 notification, 배열 값 비교는 getData() 전에 해야 함 *!/
                     if (dust_1_Data[11] > 500) {                    //dust_1_Data의 최근 데이터가 기준값을 넘는지 확인
                         this.notifyVue('top', 'center');        //위험 농도값을 넘어갔을 경우 noti 띄움
                         this.initBigChart(0);                   //해당 차트를 표시
-                        sendAlarm();
+                        //sendAlarm();
                     }
 
                     if(dust_10_Data[11] > 50){                  //dust_10_Data의 최근 데이터가 기준값을 넘는지 확인
                         this.notifyVue('top', 'center');        //위험 농도값을 넘어갔을 경우 noti 띄움
                         this.initBigChart(1);                   //해당 차트를 표시
-                        sendAlarm();
+                        //sendAlarm();
                     }
                     if(dust_25_Data[11] > 50){                  //dust_25_Data의 최근 데이터가 기준값을 넘는지 확인
                         this.notifyVue('top', 'center');        //위험 농도값을 넘어갔을 경우 noti 띄움
                         this.initBigChart(2);                   //해당 차트를 표시
-                        sendAlarm();
+                        //sendAlarm();
                     }
     
                     if(toluene_Data[5] > 150){
                         this.notifyToluene('top','center');
-                        sendAlarm();
+                        //sendAlarm();
                     }
 
                     if(voc_Data[5]> 1000){
                         this.notifyVoc('top','center');
-                        sendAlarm();
+                        //sendAlarm();
                     }
 
                     if(co2_Data[5] > 5000){
                         this.notifyCo2('top','center');
-                        sendAlarm();
+                        //sendAlarm();
                     }
 
                     if(dust_25_Data[11] > 50){
                         this.notifyPm25('top','center');
                         this.initBigChart(1);                   //해당 차트를 표시
-                        sendAlarm();
+                        //sendAlarm();
                     }
 
                     if(dust_10_Data[11] > 100){
                         this.notifyPm10('top','center');
                         this.initBigChart(2);                   //해당 차트를 표시
-                        sendAlarm();
+                        //sendAlarm();
                     }
 
                     if(o2_Data[5] > 23.5){
@@ -475,9 +620,10 @@
 
                     if(o2_Data[5] < 18){
                         this.notifyO2Low('top','center');
-                        sendAlarm();
+                        //sendAlarm();
                         
                     }
+*/
 
 
 
@@ -496,12 +642,18 @@
                     this.co2Value=co2_Data[5];
                     this.o2Value=o2_Data[5];
                     this.tolueneValue=toluene_Data[5];
+                    this.h2hoValue=h2ho_Data[5];
+                    this.radonValue=radon_Data[5];
+                    this.coValue=co_Data[5];
 
                     await that.initBigChart(indexValue);          //this대신 that으로 사용
                     await that.initCo2Chart();
                     await that.initTolueneChart();
                     await that.initO2Chart();
                     await that.initVocChart();
+                    await that.initH2hoChart();
+                    await that.initRadonChart();
+                    await that.initCoChart();
                     console.log("callback 지옥 끝");
 
 
@@ -526,6 +678,9 @@
                 o2Value: o2_Data[0],
                 tolueneValue: toluene_Data[0],
                 co2Value: co2_Data[0],
+                h2hoValue: h2ho_Data[0],
+                radonValue: radon_Data[0],
+                coValue: co_Data[0],
                 type: ["", "info", "success", "warning", "danger"],     //noti용 type
                 bigLineChart: {
                     allData: [
@@ -631,6 +786,78 @@
                             pointHoverBorderWidth: 15,
                             pointRadius: 4,
                             data: toluene_Data,
+                        }]
+                    },
+                    gradientColors: config.colors.primaryGradient,
+                    gradientStops: [1, 0.2, 0],
+                },
+                h2hoLineChart: {
+                    extraOptions: chartConfigs.purpleChartOptions,
+                    chartData: {
+                        labels: h2ho_Label,
+                        datasets: [{
+                            label: "ppm",
+                            fill: true,
+                            borderColor: config.colors.primary,
+                            borderWidth: 2,
+                            borderDash: [],
+                            borderDashOffset: 0.0,
+                            pointBackgroundColor: config.colors.primary,
+                            pointBorderColor: 'rgba(255,255,255,0)',
+                            pointHoverBackgroundColor: config.colors.primary,
+                            pointBorderWidth: 20,
+                            pointHoverRadius: 4,
+                            pointHoverBorderWidth: 15,
+                            pointRadius: 4,
+                            data: h2ho_Data,
+                        }]
+                    },
+                    gradientColors: config.colors.primaryGradient,
+                    gradientStops: [1, 0.2, 0],
+                },
+                radonLineChart: {
+                    extraOptions: chartConfigs.purpleChartOptions,
+                    chartData: {
+                        labels: radon_Label,
+                        datasets: [{
+                            label: "μsv/h",
+                            fill: true,
+                            borderColor: config.colors.primary,
+                            borderWidth: 2,
+                            borderDash: [],
+                            borderDashOffset: 0.0,
+                            pointBackgroundColor: config.colors.primary,
+                            pointBorderColor: 'rgba(255,255,255,0)',
+                            pointHoverBackgroundColor: config.colors.primary,
+                            pointBorderWidth: 20,
+                            pointHoverRadius: 4,
+                            pointHoverBorderWidth: 15,
+                            pointRadius: 4,
+                            data: radon_Data,
+                        }]
+                    },
+                    gradientColors: config.colors.primaryGradient,
+                    gradientStops: [1, 0.2, 0],
+                },
+                coLineChart: {
+                    extraOptions: chartConfigs.purpleChartOptions,
+                    chartData: {
+                        labels: co_Label,
+                        datasets: [{
+                            label: "ppm",
+                            fill: true,
+                            borderColor: config.colors.primary,
+                            borderWidth: 2,
+                            borderDash: [],
+                            borderDashOffset: 0.0,
+                            pointBackgroundColor: config.colors.primary,
+                            pointBorderColor: 'rgba(255,255,255,0)',
+                            pointHoverBackgroundColor: config.colors.primary,
+                            pointBorderWidth: 20,
+                            pointHoverRadius: 4,
+                            pointHoverBorderWidth: 15,
+                            pointRadius: 4,
+                            data: co_Data,
                         }]
                     },
                     gradientColors: config.colors.primaryGradient,
@@ -840,6 +1067,79 @@
                 this.vocLineChart.chartData = chartData;
             },
 
+            initH2hoChart() {
+                let chartData = {
+                    labels: h2ho_Label,
+                    datasets: [{
+                        label: "ppm",
+                        fill: true,
+                        borderColor: config.colors.primary,
+                        borderWidth: 2,
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        pointBackgroundColor: config.colors.primary,
+                        pointBorderColor: 'rgba(255,255,255,0)',
+                        pointHoverBackgroundColor: config.colors.primary,
+                        pointBorderWidth: 20,
+                        pointHoverRadius: 4,
+                        pointHoverBorderWidth: 15,
+                        pointRadius: 4,
+                        data: h2ho_Data
+                    }]
+                }
+                this.$refs.h2hoLineChart.updateGradients(chartData);
+                this.h2hoLineChart.chartData = chartData;
+            },
+
+            initRadonChart() {
+                let chartData = {
+                    labels: radon_Label,
+                    datasets: [{
+                        label: "μsv/h",
+                        fill: true,
+                        borderColor: config.colors.primary,
+                        borderWidth: 2,
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        pointBackgroundColor: config.colors.primary,
+                        pointBorderColor: 'rgba(255,255,255,0)',
+                        pointHoverBackgroundColor: config.colors.primary,
+                        pointBorderWidth: 20,
+                        pointHoverRadius: 4,
+                        pointHoverBorderWidth: 15,
+                        pointRadius: 4,
+                        data: radon_Data
+                    }]
+                }
+                this.$refs.radonLineChart.updateGradients(chartData);
+                this.radonLineChart.chartData = chartData;
+            },
+
+            initCoChart() {
+                let chartData = {
+                    labels: co_Label,
+                    datasets: [{
+                        label: "ppm",
+                        fill: true,
+                        borderColor: config.colors.primary,
+                        borderWidth: 2,
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        pointBackgroundColor: config.colors.primary,
+                        pointBorderColor: 'rgba(255,255,255,0)',
+                        pointHoverBackgroundColor: config.colors.primary,
+                        pointBorderWidth: 20,
+                        pointHoverRadius: 4,
+                        pointHoverBorderWidth: 15,
+                        pointRadius: 4,
+                        data: co_Data
+                    }]
+                }
+                this.$refs.coLineChart.updateGradients(chartData);
+                this.coLineChart.chartData = chartData;
+            },
+
+
             refreshChart(index) {
                 setTimeout(() => {
                     console.log("refresh chart");
@@ -848,6 +1148,10 @@
                     this.initTolueneChart();
                     this.initO2Chart();
                     this.initVocChart();
+                    this.initH2hoChart();
+                    this.initRadonChart();
+                    this.initCoChart();
+
                 }, 1000);                                                //400밀리초 뒤에 chart refresh
             },
             notifyVue(verticalAlign, horizontalAlign) {
@@ -946,8 +1250,6 @@
                     timeout: 0                                       //팝업 떠 있는 시간(ms), 0초 = 무한
                 });
             },
-
-
 
         },
         mounted() {
