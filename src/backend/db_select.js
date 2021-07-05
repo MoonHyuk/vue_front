@@ -82,7 +82,7 @@ const getCoLive = async () => {
 
 const getLongTerm = async (datetime) => {
   try {
-    return await axios.get('/api/long-term?startDatetime=' + datetime);
+    return await axios.get('/api/long-term?startDatetime=' + (datetime ? datetime: ''));
   } catch (error) {
     console.error(error);
   }

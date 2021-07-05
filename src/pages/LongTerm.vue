@@ -1,5 +1,6 @@
 <template>
   <div>
+    <input type="datetime-local" v-model="startDate">
     <div class="row">
       <div
           v-for="(data, name) in sensors"
@@ -65,22 +66,31 @@ export default {
         gradientColors: config.colors.primaryGradient,
         gradientStops: [1, 0.2, 0]
       }
+    },
+    fetchAndDraw(startDate) {
+      api.getLongTerm(startDate).then(res => {
+        this.sensors = Object.keys(res.data).sort().reduce((acc, key) => (acc[key] = res.data[key], acc), {})
+
+        Object.entries(this.sensors).forEach(([name, { data }]) => {
+          this.chartOptions[name] = this.makeChartOption(data);
+        })
+      });
+    }
+  },
+  watch: {
+    startDate(newValue, _) {
+      this.fetchAndDraw(newValue);
     }
   },
   data() {
     return {
       sensors: [],
       chartOptions: {},
+      startDate: null,
     }
   },
   mounted() {
-    api.getLongTerm("2021-07-05 18:30").then(res => {
-      this.sensors = Object.keys(res.data).sort().reduce((acc, key) => (acc[key] = res.data[key], acc), {})
-
-      Object.entries(this.sensors).forEach(([name, { data }]) => {
-        this.chartOptions[name] = this.makeChartOption(data);
-      })
-    })
+    this.fetchAndDraw();
   }
 }
 </script>
