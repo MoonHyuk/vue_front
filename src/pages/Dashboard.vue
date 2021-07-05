@@ -242,7 +242,7 @@
 
     let indexValue = 0;                        //현재 보고 있는 탭의 index값 저장용 변수
     let refresh_remain = init_refresh_time;    //새로고침까지 남은시간 변수
-    var refresh_set_timer;                     //새로고침 타이머 저장 변수, set과 clear 하기 위해서 필요 
+    var refresh_set_timer;                     //새로고침 타이머 저장 변수, set과 clear 하기 위해서 필요
 
     let async = require('async');
 
@@ -292,8 +292,6 @@
         dust_1_Label=dust_1_Label.reverse();
 
         dust_Label[0]=dust_1_Label;
-
-        console.log("dust_1_Data",dust_1_Data);
     }
 
     async function get_dust10() {
@@ -317,8 +315,6 @@
         dust_10_Label=dust_10_Label.reverse();
 
         dust_Label[2]=dust_10_Label;
-
-        console.log("dust_10_Data",dust_10_Data);
     }
 
     async function get_dust25() {
@@ -342,8 +338,6 @@
         dust_25_Label=dust_25_Label.reverse();
 
         dust_Label[1]=dust_25_Label;
-
-        console.log("dust_25_Data",dust_25_Data);
     }
 
     async function getCo2CallBack() {
@@ -365,8 +359,6 @@
         });
         co2_Data=co2_Data.reverse();
         co2_Label=co2_Label.reverse();
-
-        console.log("co2_Data",co2_Data);
 
     }
 
@@ -390,8 +382,6 @@
         toluene_Data=toluene_Data.reverse();
         toluene_Label=toluene_Label.reverse();
 
-        console.log("toluene_Data",toluene_Data);
-
     }
 
     async function getO2CallBack() {
@@ -414,8 +404,6 @@
         o2_Data=o2_Data.reverse();
         o2_Label=o2_Label.reverse();
 
-        console.log("o2_Data",o2_Data);
-
     }
 
     async function getVocCallBack() {
@@ -437,8 +425,6 @@
         });
         voc_Data=voc_Data.reverse();
         voc_Label=voc_Label.reverse();
-
-        console.log("voc_Data",voc_Data);
     }
 
     async function getH2hoCallBack() {
@@ -460,8 +446,6 @@
         });
         h2ho_Data=h2ho_Data.reverse();
         h2ho_Label=h2ho_Label.reverse();
-
-        console.log("h2ho_Data",h2ho_Data);
 
     }
 
@@ -485,8 +469,6 @@
         radon_Data=radon_Data.reverse();
         radon_Label=radon_Label.reverse();
 
-        console.log("radon_Data",radon_Data);
-
     }
 
     async function getCoCallBack() {
@@ -509,15 +491,13 @@
         co_Data=co_Data.reverse();
         co_Label=co_Label.reverse();
 
-        console.log("co_Data",co_Data);
-
     }
 
 
     async function getDataCallback() {                                   //모든 데이터를 불러오는 콜백 함수
-        //await get_dust1();
-        //await get_dust10();
-        //await get_dust25();
+        await get_dust1();
+        await get_dust10();
+        await get_dust25();
         await getCo2CallBack();
         await getTolueneCallBack();
         await getO2CallBack();
@@ -554,7 +534,6 @@
             refresh_set_timer = setTimeout(async () => {
                 if (this.refresh_remain > 1) {
                     this.refresh_remain--;
-                    console.log("refresh timer " + this.refresh_remain);
                     this.bigLineChart.refresh_remain = this.refresh_remain;
 
                     this.vocValue=voc_Data[5];
@@ -586,7 +565,7 @@
                         this.initBigChart(2);                   //해당 차트를 표시
                         //sendAlarm();
                     }
-    
+
                     if(toluene_Data[5] > 150){
                         this.notifyToluene('top','center');
                         //sendAlarm();
@@ -621,7 +600,7 @@
                     if(o2_Data[5] < 18){
                         this.notifyO2Low('top','center');
                         //sendAlarm();
-                        
+
                     }
 */
 
@@ -654,8 +633,6 @@
                     await that.initH2hoChart();
                     await that.initRadonChart();
                     await that.initCoChart();
-                    console.log("callback 지옥 끝");
-
 
 
                     //this.co2LineChart.data = co2_Data;
@@ -671,6 +648,7 @@
 
 
         data: function () {
+            chartConfigs.purpleChartOptions['scales']['yAxes'][0]['ticks']['suggestedMax'] = 0;
 
             return {
                 refresh_remain: refresh_remain,      //refresh까지 남은 시간 data
@@ -1142,7 +1120,6 @@
 
             refreshChart(index) {
                 setTimeout(() => {
-                    console.log("refresh chart");
                     this.initBigChart(index);
                     this.initCo2Chart();
                     this.initTolueneChart();
@@ -1264,8 +1241,7 @@
             console.timeEnd('response in');
         },
         beforeDestroy() {
-            //console.log("timer멈춤");
-            clearTimeout(timer);
+            clearTimeout(refresh_set_timer);
             if (this.$rtl.isRTL) {
                 this.i18n.locale = 'en';
                 this.$rtl.disableRTL();

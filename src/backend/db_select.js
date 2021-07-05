@@ -80,6 +80,14 @@ const getCoLive = async () => {
   }
 };
 
+const getLongTerm = async (datetime) => {
+  try {
+    return await axios.get('/api/long-term?startDatetime=' + datetime);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 module.exports = {
-  getCo2Live, getTolueneLive, getPm1Live, getPm25Live, getPm10Live, getO2Live, getVocLive, getH2hoLive, getRadonLive, getCoLive
+  getCo2Live, getTolueneLive, getPm1Live, getPm25Live, getPm10Live, getO2Live, getVocLive, getH2hoLive, getRadonLive, getCoLive, getLongTerm,
 }

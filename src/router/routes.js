@@ -1,17 +1,10 @@
 import DashboardLayout from "@/layout/dashboard/DashboardLayout.vue";
-// GeneralViews
 import NotFound from "@/pages/NotFoundPage.vue";
 
-// Admin pages
 const Dashboard = () => import(/* webpackChunkName: "dashboard" */"@/pages/Dashboard.vue");
 const Oxygen = () => import(/* webpackChunkName: "dashboard" */"@/pages/Oxygen.vue");
 const Co2 = () => import(/* webpackChunkName: "dashboard" */"@/pages/Co2.vue");
-const Profile = () => import(/* webpackChunkName: "common" */ "@/pages/Profile.vue");
-const Notifications = () => import(/* webpackChunkName: "common" */"@/pages/Notifications.vue");
-const Icons = () => import(/* webpackChunkName: "common" */ "@/pages/Icons.vue");
-const Maps = () => import(/* webpackChunkName: "common" */ "@/pages/Maps.vue");
-const Typography = () => import(/* webpackChunkName: "common" */ "@/pages/Typography.vue");
-const TableList = () => import(/* webpackChunkName: "common" */ "@/pages/TableList.vue");
+const LongTerm = () => import("@/pages/LongTerm.vue");
 
 const routes = [
   {
@@ -25,45 +18,15 @@ const routes = [
         component: Dashboard
       },
       {
-        path: "oxygen",
-        name: "oxygen",
-        component: Oxygen
+        path: "long-term",
+        name: "long-term",
+        component: LongTerm,
       },
       {
         path: "co2",
         name: "co2",
         component: Co2
       },
-      {
-        path: "profile",
-        name: "profile",
-        component: Profile
-      },
-      {
-        path: "notifications",
-        name: "notifications",
-        component: Notifications
-      },
-      {
-        path: "icons",
-        name: "icons",
-        component: Icons
-      },
-      {
-        path: "maps",
-        name: "maps",
-        component: Maps
-      },
-      {
-        path: "typography",
-        name: "typography",
-        component: Typography
-      },
-      {
-        path: "table-list",
-        name: "table-list",
-        component: TableList
-      }
     ]
   },
   { path: "*", component: NotFound },
