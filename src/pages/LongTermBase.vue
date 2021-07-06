@@ -8,7 +8,7 @@
       >
         <card type="chart">
           <template slot="header">
-            <h5 class="card-category">6시간 농도</h5>
+            <h5 class="card-category">{{ type }}</h5>
             <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i> {{ name.toUpperCase() }}</h3>
           </template>
           <div class="chart-area">
@@ -30,7 +30,7 @@
               </tr>
               </thead>
               <tbody>
-              <tr v-for="item in data['data']" :key="index">
+              <tr v-for="item in data['data']">
                 <td>{{ item['checkTime'] }}</td>
                 <td style="text-align: right;">{{ item['ppm'] }}</td>
               </tr>
@@ -51,7 +51,13 @@ import config from "@/config";
 const api = require("../backend/db_select");
 
 export default {
-  name: "LongTerm",
+  name: "LongTermBase",
+  props: {
+    type: {
+      type: String,
+      default: "TWA"
+    },
+  },
   components: {
     LineChart,
   },
@@ -84,7 +90,7 @@ export default {
       }
     },
     fetchAndDraw(startDate) {
-      api.getLongTerm(startDate).then(res => {
+      api.getLongTerm(this.type, startDate).then(res => {
         this.sensors = Object.keys(res.data).sort().reduce((acc, key) => (acc[key] = res.data[key], acc), {})
 
         Object.entries(this.sensors).forEach(([name, { data }]) => {

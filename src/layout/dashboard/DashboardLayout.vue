@@ -3,7 +3,8 @@
     <side-bar>
       <template slot="links">
         <sidebar-link to="/dashboard" :name="$t('sidebar.dashboard')" icon="tim-icons icon-chart-pie-36"/>
-        <sidebar-link to="/long-term" name="6시간 농도" icon="tim-icons icon-chart-pie-36"/>
+        <sidebar-link to="/twa" name="TWA" icon="tim-icons icon-chart-pie-36"/>
+        <sidebar-link to="/stel" name="STEL" icon="tim-icons icon-chart-pie-36"/>
       </template>
     </side-bar>
     <div class="main-panel">

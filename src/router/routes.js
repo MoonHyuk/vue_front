@@ -4,7 +4,8 @@ import NotFound from "@/pages/NotFoundPage.vue";
 const Dashboard = () => import(/* webpackChunkName: "dashboard" */"@/pages/Dashboard.vue");
 const Oxygen = () => import(/* webpackChunkName: "dashboard" */"@/pages/Oxygen.vue");
 const Co2 = () => import(/* webpackChunkName: "dashboard" */"@/pages/Co2.vue");
-const LongTerm = () => import("@/pages/LongTerm.vue");
+const TWA = () => import("@/pages/TWA.vue");
+const STEL = () => import("@/pages/STEL.vue");
 
 const routes = [
   {
@@ -18,9 +19,14 @@ const routes = [
         component: Dashboard
       },
       {
-        path: "long-term",
-        name: "long-term",
-        component: LongTerm,
+        path: "twa",
+        name: "twa",
+        component: TWA,
+      },
+      {
+        path: "stel",
+        name: "stel",
+        component: STEL,
       },
       {
         path: "co2",

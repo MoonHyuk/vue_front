@@ -80,9 +80,9 @@ const getCoLive = async () => {
   }
 };
 
-const getLongTerm = async (datetime) => {
+const getLongTerm = async (type, datetime) => {
   try {
-    return await axios.get('/api/long-term?startDatetime=' + (datetime ? datetime: ''));
+    return await axios.get('/api/long-term?startDatetime=' + (datetime ? datetime: '') + '&type=' + type);
   } catch (error) {
     console.error(error);
   }
