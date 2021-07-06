@@ -4,7 +4,6 @@
       <template slot="links">
         <sidebar-link to="/dashboard" :name="$t('sidebar.dashboard')" icon="tim-icons icon-chart-pie-36"/>
         <sidebar-link to="/long-term" name="6시간 농도" icon="tim-icons icon-chart-pie-36"/>
-        <sidebar-link to="/co2" :name="$t('co2')" icon="tim-icons icon-chart-pie-36"/>
       </template>
     </side-bar>
     <div class="main-panel">

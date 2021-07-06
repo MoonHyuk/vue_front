@@ -21,6 +21,22 @@
                         :extra-options="chartOptions[name].extraOptions">
             </line-chart>
           </div>
+          <div style="height: 200px; overflow: scroll; margin-top: 16px; padding: 0 16px;">
+            <table class="table tablesorter">
+              <thead>
+              <tr>
+                <th>시간</th>
+                <th style="text-align: right;">측정값</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="item in data['data']" :key="index">
+                <td>{{ item['checkTime'] }}</td>
+                <td style="text-align: right;">{{ item['ppm'] }}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
         </card>
       </div>
     </div>
