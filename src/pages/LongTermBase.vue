@@ -1,6 +1,18 @@
 <template>
   <div>
-    <input type="datetime-local" v-model="startDate">
+    <label style="margin-right: 16px;">
+      센서 ID
+      <select v-model="sensorId">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </select>
+    </label>
+
+    <label>
+      측정 시작 시간
+      <input type="datetime-local" v-model="startDate">
+    </label>
     <div class="row">
       <div
           v-for="(data, name) in sensors"
@@ -89,8 +101,8 @@ export default {
         gradientStops: [1, 0.2, 0]
       }
     },
-    fetchAndDraw(startDate) {
-      api.getLongTerm(this.type, startDate).then(res => {
+    fetchAndDraw(sensorId, startDate) {
+      api.getLongTerm(this.type, sensorId, startDate).then(res => {
         this.sensors = Object.keys(res.data).sort().reduce((acc, key) => (acc[key] = res.data[key], acc), {})
 
         Object.entries(this.sensors).forEach(([name, { data }]) => {
@@ -101,7 +113,10 @@ export default {
   },
   watch: {
     startDate(newValue, _) {
-      this.fetchAndDraw(newValue);
+      this.fetchAndDraw(this.sensorId, newValue);
+    },
+    sensorId(newValue, _) {
+      this.fetchAndDraw(newValue, this.startDate);
     }
   },
   data() {
@@ -109,10 +124,11 @@ export default {
       sensors: [],
       chartOptions: {},
       startDate: null,
+      sensorId: 1,
     }
   },
   mounted() {
-    this.fetchAndDraw();
+    this.fetchAndDraw(this.sensorId, this.startDate);
   }
 }
 </script>

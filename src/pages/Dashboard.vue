@@ -1,7 +1,15 @@
 <template>
     <div>
+      <label style="margin-right: 16px;">
+        센서 ID
+        <select v-model="sensorId">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+      </label>
 
-        <div class="row">
+      <div class="row">
             <div class="col-12">
                 <card type="chart">
                     <template slot="header">
@@ -271,19 +279,19 @@
 
 
 
-    async function get_dust1() {
+    async function get_dust1(sensorId) {
         dust_1_Data = [];
         dust_1_Label = [];
 
         var db = require('../backend/db_select');
-        await db.getPm1Live().then((result) => {
+        await db.getPm1Live(sensorId).then((result) => {
             if (result) {
                 for (var i = 0; i < 24; i++) {         //for문 안돌리면 undefined값이 return 됨
                     if (i % 2 === 0) {
                         dust_1_Data.push(result.data[i]);
                     }
                     else{
-                        dust_1_Label.push(result.data[i].substr(11,8));
+                        dust_1_Label.push(result.data[i] ? result.data[i].substr(11,8) : '');
                     }
                 }
             }
@@ -294,19 +302,19 @@
         dust_Label[0]=dust_1_Label;
     }
 
-    async function get_dust10() {
+    async function get_dust10(sensorId) {
         dust_10_Data = [];
         dust_10_Label = [];
 
         var db = require('../backend/db_select');
-        await db.getPm10Live().then((result) => {
+        await db.getPm10Live(sensorId).then((result) => {
             if (result) {
                 for (var i = 0; i < 24; i++) {         //for문 안돌리면 undefined값이 return 됨
                     if (i % 2 === 0) {
                         dust_10_Data.push(result.data[i]);
                     }
                     else{
-                        dust_10_Label.push(result.data[i].substr(11,8));
+                        dust_10_Label.push(result.data[i] ? result.data[i].substr(11,8) : '');
                     }
                 }
             }
@@ -317,19 +325,19 @@
         dust_Label[2]=dust_10_Label;
     }
 
-    async function get_dust25() {
+    async function get_dust25(sensorId) {
         dust_25_Data = [];
         dust_25_Label = [];
 
         var db = require('../backend/db_select');
-        await db.getPm25Live().then((result) => {
+        await db.getPm25Live(sensorId).then((result) => {
             if (result) {
                 for (var i = 0; i < 24; i++) {         //for문 안돌리면 undefined값이 return 됨
                     if (i % 2 === 0) {
                         dust_25_Data.push(result.data[i]);
                     }
                     else{
-                        dust_25_Label.push(result.data[i].substr(11,8));
+                        dust_25_Label.push(result.data[i] ? result.data[i].substr(11,8) : '');
                     }
                 }
             }
@@ -340,19 +348,19 @@
         dust_Label[1]=dust_25_Label;
     }
 
-    async function getCo2CallBack() {
+    async function getCo2CallBack(sensorId) {
         co2_Data = [];
         co2_Label = [];
 
         var db = require('../backend/db_select');
-        await db.getCo2Live().then((result) => {
+        await db.getCo2Live(sensorId).then((result) => {
             if (result) {
                 for (var i = 0; i < 12; i++) {         //for문 안돌리면 undefined값이 return 됨
                     if (i % 2 === 0) {
                         co2_Data.push(result.data[i]);
                     }
                     else{
-                        co2_Label.push(result.data[i].substr(11,8));
+                        co2_Label.push(result.data[i] ? result.data[i].substr(11,8) : '');
                     }
                 }
             }
@@ -362,19 +370,19 @@
 
     }
 
-    async function getTolueneCallBack() {
+    async function getTolueneCallBack(sensorId) {
         toluene_Data = [];
         toluene_Label = [];
 
         var db = require('../backend/db_select');
-        await db.getTolueneLive().then((result) => {
+        await db.getTolueneLive(sensorId).then((result) => {
             if (result) {
                 for (var i = 0; i < 12; i++) {         //for문 안돌리면 undefined값이 return 됨
                     if (i % 2 === 0) {
                         toluene_Data.push(result.data[i]);
                     }
                     else{
-                        toluene_Label.push(result.data[i].substr(11,8));
+                        toluene_Label.push(result.data[i] ? result.data[i].substr(11,8) : '');
                     }
                 }
             }
@@ -384,19 +392,19 @@
 
     }
 
-    async function getO2CallBack() {
+    async function getO2CallBack(sensorId) {
         o2_Data = [];
         o2_Label = [];
 
         var db = require('../backend/db_select');
-        await db.getO2Live().then((result) => {
+        await db.getO2Live(sensorId).then((result) => {
             if (result) {
                 for (var i = 0; i < 12; i++) {         //for문 안돌리면 undefined값이 return 됨
                     if (i % 2 === 0) {
                         o2_Data.push(result.data[i]);
                     }
                     else{
-                        o2_Label.push(result.data[i].substr(11,8));
+                        o2_Label.push(result.data[i] ? result.data[i].substr(11,8) : '');
                     }
                 }
             }
@@ -406,18 +414,18 @@
 
     }
 
-    async function getVocCallBack() {
+    async function getVocCallBack(sensorId) {
         voc_Data = [];
         voc_Label = [];
         var db = require('../backend/db_select');
-        await db.getVocLive().then((result) => {
+        await db.getVocLive(sensorId).then((result) => {
             if (result) {
                 for (var i = 0; i < 12; i++) {         //for문 안돌리면 undefined값이 return 됨
                     if (i % 2 === 0) {
                         voc_Data.push(result.data[i]);
                     }
                     else{
-                        voc_Label.push(result.data[i].substr(11,8));
+                        voc_Label.push(result.data[i] ? result.data[i].substr(11,8) : '');
                     }
 
                 }
@@ -427,19 +435,19 @@
         voc_Label=voc_Label.reverse();
     }
 
-    async function getH2hoCallBack() {
+    async function getH2hoCallBack(sensorId) {
         h2ho_Data = [];
         h2ho_Label = [];
 
         var db = require('../backend/db_select');
-        await db.getH2hoLive().then((result) => {
+        await db.getH2hoLive(sensorId).then((result) => {
             if (result) {
                 for (var i = 0; i < 12; i++) {         //for문 안돌리면 undefined값이 return 됨
                     if (i % 2 === 0) {
                         h2ho_Data.push(result.data[i]);
                     }
                     else{
-                        h2ho_Label.push(result.data[i].substr(11,8));
+                        h2ho_Label.push(result.data[i] ? result.data[i].substr(11,8) : '');
                     }
                 }
             }
@@ -449,19 +457,19 @@
 
     }
 
-    async function getRadonCallBack() {
+    async function getRadonCallBack(sensorId) {
         radon_Data = [];
         radon_Label = [];
 
         var db = require('../backend/db_select');
-        await db.getRadonLive().then((result) => {
+        await db.getRadonLive(sensorId).then((result) => {
             if (result) {
                 for (var i = 0; i < 12; i++) {         //for문 안돌리면 undefined값이 return 됨
                     if (i % 2 === 0) {
                         radon_Data.push(result.data[i]);
                     }
                     else{
-                        radon_Label.push(result.data[i].substr(11,8));
+                        radon_Label.push(result.data[i] ? result.data[i].substr(11,8) : '');
                     }
                 }
             }
@@ -471,19 +479,19 @@
 
     }
 
-    async function getCoCallBack() {
+    async function getCoCallBack(sensorId) {
         co_Data = [];
         co_Label = [];
 
         var db = require('../backend/db_select');
-        await db.getCoLive().then((result) => {
+        await db.getCoLive(sensorId).then((result) => {
             if (result) {
                 for (var i = 0; i < 12; i++) {         //for문 안돌리면 undefined값이 return 됨
                     if (i % 2 === 0) {
                         co_Data.push(result.data[i]);
                     }
                     else{
-                        co_Label.push(result.data[i].substr(11,8));
+                        co_Label.push(result.data[i] ? result.data[i].substr(11,8) : '');
                     }
                 }
             }
@@ -494,17 +502,17 @@
     }
 
 
-    async function getDataCallback() {                                   //모든 데이터를 불러오는 콜백 함수
-        await get_dust1();
-        await get_dust10();
-        await get_dust25();
-        await getCo2CallBack();
-        await getTolueneCallBack();
-        await getO2CallBack();
-        await getVocCallBack();
-        await getH2hoCallBack();
-        await getRadonCallBack();
-        await getCoCallBack();
+    async function getDataCallback(sensorId = 1) {                                   //모든 데이터를 불러오는 콜백 함수
+        await get_dust1(sensorId);
+        await get_dust10(sensorId);
+        await get_dust25(sensorId);
+        await getCo2CallBack(sensorId);
+        await getTolueneCallBack(sensorId);
+        await getO2CallBack(sensorId);
+        await getVocCallBack(sensorId);
+        await getH2hoCallBack(sensorId);
+        await getRadonCallBack(sensorId);
+        await getCoCallBack(sensorId);
     }
 
     /*function sendAlarm() {
@@ -544,71 +552,10 @@
                     this.radonValue=radon_Data[5];
                     this.coValue = co_Data[5];
 
-                } else {                                          //refresh_remain이 0이 되었을때, 차트를 새로고침
-
-/*
-
-                    /!* 위험농도 넘을 시 notification, 배열 값 비교는 getData() 전에 해야 함 *!/
-                    if (dust_1_Data[11] > 500) {                    //dust_1_Data의 최근 데이터가 기준값을 넘는지 확인
-                        this.notifyVue('top', 'center');        //위험 농도값을 넘어갔을 경우 noti 띄움
-                        this.initBigChart(0);                   //해당 차트를 표시
-                        //sendAlarm();
-                    }
-
-                    if(dust_10_Data[11] > 50){                  //dust_10_Data의 최근 데이터가 기준값을 넘는지 확인
-                        this.notifyVue('top', 'center');        //위험 농도값을 넘어갔을 경우 noti 띄움
-                        this.initBigChart(1);                   //해당 차트를 표시
-                        //sendAlarm();
-                    }
-                    if(dust_25_Data[11] > 50){                  //dust_25_Data의 최근 데이터가 기준값을 넘는지 확인
-                        this.notifyVue('top', 'center');        //위험 농도값을 넘어갔을 경우 noti 띄움
-                        this.initBigChart(2);                   //해당 차트를 표시
-                        //sendAlarm();
-                    }
-
-                    if(toluene_Data[5] > 150){
-                        this.notifyToluene('top','center');
-                        //sendAlarm();
-                    }
-
-                    if(voc_Data[5]> 1000){
-                        this.notifyVoc('top','center');
-                        //sendAlarm();
-                    }
-
-                    if(co2_Data[5] > 5000){
-                        this.notifyCo2('top','center');
-                        //sendAlarm();
-                    }
-
-                    if(dust_25_Data[11] > 50){
-                        this.notifyPm25('top','center');
-                        this.initBigChart(1);                   //해당 차트를 표시
-                        //sendAlarm();
-                    }
-
-                    if(dust_10_Data[11] > 100){
-                        this.notifyPm10('top','center');
-                        this.initBigChart(2);                   //해당 차트를 표시
-                        //sendAlarm();
-                    }
-
-                    if(o2_Data[5] > 23.5){
-                        //this.notifyO2('top','center');
-                    }
-
-                    if(o2_Data[5] < 18){
-                        this.notifyO2Low('top','center');
-                        //sendAlarm();
-
-                    }
-*/
-
-
-
+                } else {
                     /* 데이터 초기화 */
                     var that = this;                            //function 내에서 this를 쓸 수 없어서 미리 that에 선언
-                    await getDataCallback();
+                    await getDataCallback(this.sensorId);
                     //get data 콜백
 
                     this.bigLineChart.allData = [
@@ -651,6 +598,7 @@
             chartConfigs.purpleChartOptions['scales']['yAxes'][0]['ticks']['suggestedMax'] = 0;
 
             return {
+                sensorId: 1,
                 refresh_remain: refresh_remain,      //refresh까지 남은 시간 data
                 vocValue: voc_Data[0],
                 o2Value: o2_Data[0],

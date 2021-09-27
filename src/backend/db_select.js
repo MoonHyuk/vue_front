@@ -1,88 +1,88 @@
 const axios = require('axios');
 
-const getCo2Live = async () => {
+const getCo2Live = async(sensorId) => {
   try {
-    return await axios.get('/api/co2Live'); //dust_size에 따른 url 변경
+    return await axios.get('/api/co2Live?sensorId=' + sensorId); //dust_size에 따른 url 변경
   } catch (error) {
     console.error(error);
   }
 };
 
-const getTolueneLive = async () => {
+const getTolueneLive = async(sensorId) => {
   try {
-    return await axios.get('/api/tolueneLive'); //dust_size에 따른 url 변경
+    return await axios.get('/api/tolueneLive?sensorId=' + sensorId); //dust_size에 따른 url 변경
   } catch (error) {
     console.error(error);
   }
 };
 
-const getPm1Live = async () => {
+const getPm1Live = async(sensorId) => {
   try {
-    return await axios.get('/api/pm1Live'); //dust_size에 따른 url 변경
+    return await axios.get('/api/pm1Live?sensorId=' + sensorId); //dust_size에 따른 url 변경
   } catch (error) {
     console.error(error);
   }
 };
 
-const getPm25Live = async () => {
+const getPm25Live = async(sensorId) => {
   try {
-    return await axios.get('/api/pm25Live'); //dust_size에 따른 url 변경
+    return await axios.get('/api/pm25Live?sensorId=' + sensorId); //dust_size에 따른 url 변경
   } catch (error) {
     console.error(error);
   }
 };
 
-const getPm10Live = async () => {
+const getPm10Live = async(sensorId) => {
   try {
-    return await axios.get('/api/pm10Live'); //dust_size에 따른 url 변경
+    return await axios.get('/api/pm10Live?sensorId=' + sensorId); //dust_size에 따른 url 변경
   } catch (error) {
     console.error(error);
   }
 };
 
-const getO2Live = async () => {
+const getO2Live = async(sensorId) => {
   try {
-    return await axios.get('/api/o2Live'); //dust_size에 따른 url 변경
+    return await axios.get('/api/o2Live?sensorId=' + sensorId); //dust_size에 따른 url 변경
   } catch (error) {
     console.error(error);
   }
 };
 
-const getVocLive = async () => {
+const getVocLive = async(sensorId) => {
   try {
-    return await axios.get('/api/vocLive'); //dust_size에 따른 url 변경
+    return await axios.get('/api/vocLive?sensorId=' + sensorId); //dust_size에 따른 url 변경
   } catch (error) {
     console.error(error);
   }
 };
 
-const getH2hoLive = async () => {
+const getH2hoLive = async(sensorId) => {
   try {
-    return await axios.get('/api/h2hoLive');
+    return await axios.get('/api/h2hoLive?sensorId=' + sensorId);
   } catch (error) {
     console.error(error);
   }
 };
 
-const getRadonLive = async () => {
+const getRadonLive = async(sensorId) => {
   try {
-    return await axios.get('/api/radonLive');
+    return await axios.get('/api/radonLive?sensorId=' + sensorId);
   } catch (error) {
     console.error(error);
   }
 };
 
-const getCoLive = async () => {
+const getCoLive = async(sensorId) => {
   try {
-    return await axios.get('/api/coLive');
+    return await axios.get('/api/coLive?sensorId=' + sensorId);
   } catch (error) {
     console.error(error);
   }
 };
 
-const getLongTerm = async (type, datetime) => {
+const getLongTerm = async (type, sensorId, datetime) => {
   try {
-    return await axios.get('/api/long-term?startDatetime=' + (datetime ? datetime: '') + '&type=' + type);
+    return await axios.get('/api/long-term?sensorId=' + sensorId + '&startDatetime=' + (datetime ? datetime: '') + '&type=' + type);
   } catch (error) {
     console.error(error);
   }
