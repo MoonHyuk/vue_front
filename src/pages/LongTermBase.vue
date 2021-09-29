@@ -3,9 +3,10 @@
     <label style="margin-right: 16px;">
       센서 ID
       <select v-model="sensorId">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
+        <option value="1">Byeon's sensor</option>
+        <option value="2">Yoon's sensor 1</option>
+        <option value="3">Yoon's sensor 2</option>
+        <option value="4">Yoon's sensor 3</option>
       </select>
     </label>
 

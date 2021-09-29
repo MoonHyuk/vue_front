@@ -48,6 +48,15 @@ const getO2Live = async(sensorId) => {
   }
 };
 
+
+const getO3Live = async(sensorId) => {
+  try {
+    return await axios.get('/api/o3Live?sensorId=' + sensorId);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const getVocLive = async(sensorId) => {
   try {
     return await axios.get('/api/vocLive?sensorId=' + sensorId); //dust_size에 따른 url 변경
