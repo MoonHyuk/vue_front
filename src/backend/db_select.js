@@ -57,6 +57,22 @@ const getO3Live = async(sensorId) => {
   }
 };
 
+const getTempLive = async(sensorId) => {
+  try {
+    return await axios.get('/api/temperatureLive?sensorId=' + sensorId);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getHumidLive = async(sensorId) => {
+  try {
+    return await axios.get('/api/humidityLive?sensorId=' + sensorId);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const getVocLive = async(sensorId) => {
   try {
     return await axios.get('/api/vocLive?sensorId=' + sensorId); //dust_size에 따른 url 변경
@@ -99,4 +115,5 @@ const getLongTerm = async (type, sensorId, datetime) => {
 
 module.exports = {
   getCo2Live, getTolueneLive, getPm1Live, getPm25Live, getPm10Live, getO2Live, getVocLive, getH2hoLive, getRadonLive, getCoLive, getLongTerm,
+  getO3Live, getTempLive, getHumidLive
 }

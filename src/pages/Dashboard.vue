@@ -217,6 +217,47 @@
         </div>
 
         <div class="row">
+          <div class="col-lg-6" :class="{'text-right': isRTL}">
+            <card type="chart">
+              <template slot="header">
+                <h5 class="card-category">{{$t('dashboard.totalShipments')}}</h5>
+                <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>TEMPERATURE {{tempValue}} °C</h3>
+              </template>
+              <div class="chart-area">
+                <line-chart style="height: 100%"
+                            ref="tempLineChart"
+                            chart-id="purple-line-chart"
+                            :chart-data="tempLineChart.chartData"
+                            :gradient-colors="tempLineChart.gradientColors"
+                            :gradient-stops="tempLineChart.gradientStops"
+                            :extra-options="tempLineChart.extraOptions">
+                </line-chart>
+              </div>
+            </card>
+          </div>
+
+          <div class="col-lg-6" :class="{'text-right': isRTL}">
+            <card type="chart">
+              <template slot="header">
+                <h5 class="card-category">{{$t('dashboard.totalShipments')}}</h5>
+                <h3 class="card-title"><i class="tim-icons icon-heart-2 text-primary "></i>HUMIDITY {{humidValue}} %</h3>
+              </template>
+              <div class="chart-area">
+                <line-chart style="height: 100%"
+                            ref="humidLineChart"
+                            chart-id="purple-line-chart"
+                            :chart-data="humidLineChart.chartData"
+                            :gradient-colors="humidLineChart.gradientColors"
+                            :gradient-stops="humidLineChart.gradientStops"
+                            :extra-options="humidLineChart.extraOptions">
+                </line-chart>
+              </div>
+            </card>
+          </div>
+
+        </div>
+
+        <div class="row">
 
             <!--div class="col-lg-6 col-md-12">
                 <card type="tasks" :header-classes="{'text-right': isRTL}">
@@ -280,6 +321,8 @@
     let co2_Data = [];                          // co2 data 저장용 배열
     let o2_Data = [];                          // o2 data 저장용 배열
     let o3_Data = [];                          // o3 data 저장용 배열
+    let temp_Data = [];
+    let humid_Data = [];
     let toluene_Data = [];                          // toluene data 저장용 배열
     let voc_Data = [];                          // voc data 저장용 배열
     let h2ho_Data = [];
@@ -293,6 +336,8 @@
     let co2_Label = [];                          // co2 Label 저장용 배열
     let o2_Label = [];                          // o2 Label 저장용 배열
     let o3_Label = [];                          // o3 Label 저장용 배열
+    let humid_Label = [];
+    let temp_Label = [];
     let toluene_Label = [];                          // toluene Label 저장용 배열
     let voc_Label = [];                          // voc Label 저장용 배열
     let h2ho_Label = [];
@@ -457,6 +502,48 @@
       o3_Label=o3_Label.reverse();
 
     }
+    async function getTempCallBack(sensorId) {
+      temp_Data = [];
+      temp_Label = [];
+
+      var db = require('../backend/db_select');
+      await db.getTempLive(sensorId).then((result) => {
+        if (result) {
+          for (var i = 0; i < 12; i++) {         //for문 안돌리면 undefined값이 return 됨
+            if (i % 2 === 0) {
+              temp_Data.push(result.data[i]);
+            }
+            else{
+              temp_Label.push(result.data[i] ? result.data[i].substr(11,8) : '');
+            }
+          }
+        }
+      });
+      temp_Data=temp_Data.reverse();
+      temp_Label=temp_Label.reverse();
+
+    }
+    async function getHumidCallBack(sensorId) {
+      humid_Data = [];
+      humid_Label = [];
+
+      var db = require('../backend/db_select');
+      await db.getHumidLive(sensorId).then((result) => {
+        if (result) {
+          for (var i = 0; i < 12; i++) {         //for문 안돌리면 undefined값이 return 됨
+            if (i % 2 === 0) {
+              humid_Data.push(result.data[i]);
+            }
+            else{
+              humid_Label.push(result.data[i] ? result.data[i].substr(11,8) : '');
+            }
+          }
+        }
+      });
+      humid_Data=humid_Data.reverse();
+      humid_Label=humid_Label.reverse();
+
+    }
 
     async function getVocCallBack(sensorId) {
         voc_Data = [];
@@ -553,6 +640,9 @@
         await getCo2CallBack(sensorId);
         await getTolueneCallBack(sensorId);
         await getO2CallBack(sensorId);
+        await getO3CallBack(sensorId);
+        await getHumidCallBack(sensorId);
+        await getTempCallBack(sensorId);
         await getVocCallBack(sensorId);
         await getH2hoCallBack(sensorId);
         await getRadonCallBack(sensorId);
@@ -592,6 +682,8 @@
                     this.co2Value=co2_Data[5];
                     this.o2Value=o2_Data[5];
                     this.o3Value=o3_Data[5];
+                    this.tempValue=temp_Data[5];
+                    this.humidValue=humid_Data[5];
                     this.tolueneValue=toluene_Data[5];
                     this.h2hoValue=h2ho_Data[5];
                     this.radonValue=radon_Data[5];
@@ -623,6 +715,8 @@
                     await that.initTolueneChart();
                     await that.initO2Chart();
                     await that.initO3Chart();
+                    await that.initTempChart();
+                    await that.initHumidChart();
                     await that.initVocChart();
                     await that.initH2hoChart();
                     await that.initRadonChart();
@@ -649,6 +743,9 @@
                 refresh_remain: refresh_remain,      //refresh까지 남은 시간 data
                 vocValue: voc_Data[0],
                 o2Value: o2_Data[0],
+                o3Value: o3_Data[0],
+                tempValue: temp_Data[0],
+                humidValue: humid_Data[0],
                 tolueneValue: toluene_Data[0],
                 co2Value: co2_Data[0],
                 h2hoValue: h2ho_Data[0],
@@ -740,6 +837,54 @@
                   gradientColors: config.colors.primaryGradient,
                   gradientStops: [1, 0.2, 0],
                 },
+              tempLineChart: {
+                extraOptions: chartConfigs.purpleChartOptions,
+                chartData: {
+                  labels: temp_Label,
+                  datasets: [{
+                    label: "°C",
+                    fill: true,
+                    borderColor: config.colors.primary,
+                    borderWidth: 2,
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    pointBackgroundColor: config.colors.primary,
+                    pointBorderColor: 'rgba(255,255,255,0)',
+                    pointHoverBackgroundColor: config.colors.primary,
+                    pointBorderWidth: 20,
+                    pointHoverRadius: 4,
+                    pointHoverBorderWidth: 15,
+                    pointRadius: 4,
+                    data: temp_Data,
+                  }]
+                },
+                gradientColors: config.colors.primaryGradient,
+                gradientStops: [1, 0.2, 0],
+              },
+              humidLineChart: {
+                extraOptions: chartConfigs.purpleChartOptions,
+                chartData: {
+                  labels: humid_Label,
+                  datasets: [{
+                    label: "%",
+                    fill: true,
+                    borderColor: config.colors.primary,
+                    borderWidth: 2,
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    pointBackgroundColor: config.colors.primary,
+                    pointBorderColor: 'rgba(255,255,255,0)',
+                    pointHoverBackgroundColor: config.colors.primary,
+                    pointBorderWidth: 20,
+                    pointHoverRadius: 4,
+                    pointHoverBorderWidth: 15,
+                    pointRadius: 4,
+                    data: humid_Data,
+                  }]
+                },
+                gradientColors: config.colors.primaryGradient,
+                gradientStops: [1, 0.2, 0],
+              },
 
                 co2LineChart: {
                     extraOptions: chartConfigs.purpleChartOptions,
@@ -1063,6 +1208,52 @@
               this.$refs.o3LineChart.updateGradients(chartData);
               this.o3LineChart.chartData = chartData;
             },
+          initTempChart() {
+            let chartData = {
+              labels: temp_Label,
+              datasets: [{
+                label: "°C",
+                fill: true,
+                borderColor: config.colors.primary,
+                borderWidth: 2,
+                borderDash: [],
+                borderDashOffset: 0.0,
+                pointBackgroundColor: config.colors.primary,
+                pointBorderColor: 'rgba(255,255,255,0)',
+                pointHoverBackgroundColor: config.colors.primary,
+                pointBorderWidth: 20,
+                pointHoverRadius: 4,
+                pointHoverBorderWidth: 15,
+                pointRadius: 4,
+                data: temp_Data
+              }]
+            }
+            this.$refs.tempLineChart.updateGradients(chartData);
+            this.tempLineChart.chartData = chartData;
+          },
+          initHumidChart() {
+            let chartData = {
+              labels: humid_Label,
+              datasets: [{
+                label: "%",
+                fill: true,
+                borderColor: config.colors.primary,
+                borderWidth: 2,
+                borderDash: [],
+                borderDashOffset: 0.0,
+                pointBackgroundColor: config.colors.primary,
+                pointBorderColor: 'rgba(255,255,255,0)',
+                pointHoverBackgroundColor: config.colors.primary,
+                pointBorderWidth: 20,
+                pointHoverRadius: 4,
+                pointHoverBorderWidth: 15,
+                pointRadius: 4,
+                data: humid_Data
+              }]
+            }
+            this.$refs.humidLineChart.updateGradients(chartData);
+            this.humidLineChart.chartData = chartData;
+          },
 
           initVocChart() {
                 let chartData = {
@@ -1168,6 +1359,8 @@
                     this.initTolueneChart();
                     this.initO2Chart();
                     this.initO3Chart();
+                    this.initTempChart();
+                    this.initHumidChart();
                     this.initVocChart();
                     this.initH2hoChart();
                     this.initRadonChart();
